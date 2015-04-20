@@ -1,0 +1,201 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="sysUserEmp">
+	<typeAlias alias="sysuserEmpVO" type="com.ftc.vo.ProductVO" />
+
+	<cacheModel id="oneDayUrgerType" type="LRU">
+		<flushInterval hours="24" />
+	</cacheModel>
+	<resultMap id="sysUserEmpRS" class="sysUserEmpVO">
+		<result property="empCde" column="c_emp_cde" />
+		<result property="empNme" column="c_emp_nme" />
+		<result property="dptCde" column="c_dpt_cde" />
+		<result property="dptNme" column="c_dpt_nme" />
+		<result property="passwd" column="c_passwd" />
+		<result property="mobile" column="c_mobile" />
+		<result property="bgnTm" column="t_bgn_tm" />
+		<result property="endTm" column="t_end_tm" />
+		<result property="createtime" column="C_CREATE_TIME" />
+		<result property="sysuserInfo" column="c_sysuser_info" />
+		<result property="sysuserMenu" column="c_sysuser_menu" />
+		<result property="plyDptMenu" column="c_ply_dpt_menu" />
+		<result property="isValid" column="c_is_valid"/>
+	</resultMap>
+	<resultMap id="sysUserEmpRS2" class="sysUserEmpVO">
+		<result property="empCde" column="c_emp_cde" />
+		<result property="empNme" column="c_emp_nme" />
+		<result property="dptCde" column="c_dpt_cde" />
+		<result property="dptNme" column="c_dpt_nme" />
+		<result property="passwd" column="c_passwd" />
+		<result property="mobile" column="c_mobile" />
+		<result property="bgnTm" column="t_bgn_tm" />
+		<result property="endTm" column="t_end_tm" />
+		<result property="createtime" column="c_CREATE_TIME" />
+		<result property="sysuserInfo" column="c_sysuser_info" />
+		<result property="sysuserMenu" column="c_sysuser_menu" />
+		<result property="plyDptMenu" column="c_ply_dpt_menu" />
+		<result property="isValid" column="c_is_valid"/>
+	</resultMap>	
+	
+	<select id="toList" resultMap="sysUserEmpRS" parameterClass="sysuserEmpVO">
+		SELECT 
+		  c_emp_cde,
+		c_emp_nme,
+		c_dpt_cde,
+		c_create_time,
+		(select c_dpt_Nme from T_SYSUSER_DPT where c_dpt_Cde=A.c_dpt_Cde) as c_dpt_nme,
+		c_passwd,
+		c_mobile,
+		c_is_valid,
+		t_bgn_tm,
+		t_end_tm,
+		c_sysuser_info,
+		c_sysuser_menu,
+		c_ply_dpt_menu
+		 FROM T_SYSUSER_EMP A
+		 WHERE 1=1 <isParameterPresent><isPropertyAvailable property="empCde"><isNotNull property="empCde"><isNotEmpty prepend="AND" property="empCde"> c_emp_cde = #empCde#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="empNme"><isNotNull property="empNme"><isNotEmpty prepend="AND" property="empNme"> c_emp_nme = #empNme#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="dptCde"><isNotNull property="dptCde"><isNotEmpty prepend="AND" property="dptCde"> c_dpt_cde = #dptCde#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="dptNme"><isNotNull property="dptNme"><isNotEmpty prepend="AND" property="dptNme"> c_dpt_nme = #dptNme#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="passwd"><isNotNull property="passwd"><isNotEmpty prepend="AND" property="passwd"> c_passwd = #passwd#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="mobile"><isNotNull property="mobile"><isNotEmpty prepend="AND" property="mobile"> c_mobile = #mobile#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="isValid"><isNotNull property="isValid"><isNotEmpty prepend="AND" property="isValid"> c_is_valid = #isValid#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="bgnTm"><isNotNull property="bgnTm"><isNotEmpty prepend="AND" property="bgnTm"> t_bgn_tm LIKE to_date(#bgnTm#,'yyyy-MM-dd') </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="endTm"><isNotNull property="endTm"><isNotEmpty prepend="AND" property="endTm"> t_end_tm LIKE to_date(#endTm#,'yyyy-MM-dd') </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="plyDptMenu"><isNotNull property="plyDptMenu"><isNotEmpty prepend="AND" property="plyDptMenu"> c_ply_dpt_menu = #plyDptMenu#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="orderFid"><isNotNull property="orderFid"><isNotEmpty prepend=" ORDER BY " property="orderFid"> $orderFid$ </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="orderType"><isNotNull property="orderType"><isNotEmpty prepend="  " property="orderType"> $orderType$ </isNotEmpty></isNotNull></isPropertyAvailable>
+		</isParameterPresent>
+	</select>
+	
+	<select id="toList2" resultMap="sysUserEmpRS2" parameterClass="sysuserEmpVO">
+		SELECT 
+		  c_emp_cde,
+		c_emp_nme,
+		c_dpt_cde,
+		c_create_time,
+		(select c_dpt_Nme from T_SYSUSER_DPT where c_dpt_Cde=A.c_dpt_Cde) as c_dpt_nme,
+		c_passwd,
+		c_mobile,
+		c_is_valid,
+		t_bgn_tm,
+		t_end_tm,
+		c_sysuser_info,
+		c_sysuser_menu,
+		c_ply_dpt_menu
+		 FROM T_SYSUSER_EMP A
+		 WHERE 1=1
+		<isParameterPresent><isPropertyAvailable property="empCde"><isNotNull property="empCde"><isNotEmpty prepend="AND" property="empCde"> c_emp_cde = #empCde#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="empNme"><isNotNull property="empNme"><isNotEmpty prepend="AND" property="empNme"> c_emp_nme = #empNme#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="dptCde"><isNotNull property="dptCde"><isNotEmpty prepend="AND" property="dptCde"> c_dpt_cde like (#dptCde# || '%')  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="dptNme"><isNotNull property="dptNme"><isNotEmpty prepend="AND" property="dptNme"> c_dpt_nme = #dptNme#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="passwd"><isNotNull property="passwd"><isNotEmpty prepend="AND" property="passwd"> c_passwd = #passwd#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="mobile"><isNotNull property="mobile"><isNotEmpty prepend="AND" property="mobile"> c_mobile = #mobile#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="isValid"><isNotNull property="isValid"><isNotEmpty prepend="AND" property="isValid"> c_is_valid = #isValid#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="bgnTm"><isNotNull property="bgnTm"><isNotEmpty prepend="AND" property="bgnTm"> t_bgn_tm LIKE to_date(#bgnTm#,'yyyy-MM-dd') </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="endTm"><isNotNull property="endTm"><isNotEmpty prepend="AND" property="endTm"> t_end_tm LIKE to_date(#endTm#,'yyyy-MM-dd') </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="plyDptMenu"><isNotNull property="plyDptMenu"><isNotEmpty prepend="AND" property="plyDptMenu"> c_ply_dpt_menu = #plyDptMenu#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="orderFid"><isNotNull property="orderFid"><isNotEmpty prepend=" ORDER BY " property="orderFid"> $orderFid$ </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="orderType"><isNotNull property="orderType"><isNotEmpty prepend="  " property="orderType"> $orderType$ </isNotEmpty></isNotNull></isPropertyAvailable>
+		</isParameterPresent>
+		 
+	</select>
+	
+	<select id="getTotalCount" resultClass="int" parameterClass="sysuserEmpVO">
+		SELECT count(c_emp_cde) FROM T_SYSUSER_EMP 
+		 WHERE 1=1 
+		<isParameterPresent>
+		<isPropertyAvailable property="empCde"><isNotNull property="empCde"><isNotEmpty prepend="AND" property="empCde"> c_emp_cde = #empCde#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="empNme"><isNotNull property="empNme"><isNotEmpty prepend="AND" property="empNme"> c_emp_nme = #empNme#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="dptCde"><isNotNull property="dptCde"><isNotEmpty prepend="AND" property="dptCde"> c_dpt_cde like (#dptCde# || '%')  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="dptNme"><isNotNull property="dptNme"><isNotEmpty prepend="AND" property="dptNme"> c_dpt_nme = #dptNme#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="passwd"><isNotNull property="passwd"><isNotEmpty prepend="AND" property="passwd"> c_passwd = #passwd#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="mobile"><isNotNull property="mobile"><isNotEmpty prepend="AND" property="mobile"> c_mobile = #mobile#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="isValid"><isNotNull property="isValid"><isNotEmpty prepend="AND" property="isValid"> c_is_valid = #isValid#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="bgnTm"><isNotNull property="bgnTm"><isNotEmpty prepend="AND" property="bgnTm"> t_bgn_tm LIKE to_date(#bgnTm#,'yyyy-MM-dd') </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="endTm"><isNotNull property="endTm"><isNotEmpty prepend="AND" property="endTm"> t_end_tm LIKE to_date(#endTm#,'yyyy-MM-dd') </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="plyDptMenu"><isNotNull property="plyDptMenu"><isNotEmpty prepend="AND" property="plyDptMenu"> c_ply_dpt_menu = #plyDptMenu#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="orderFid"><isNotNull property="orderFid"><isNotEmpty prepend=" ORDER BY " property="orderFid"> $orderFid$ </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="orderType"><isNotNull property="orderType"><isNotEmpty prepend="  " property="orderType"> $orderType$ </isNotEmpty></isNotNull></isPropertyAvailable>
+		</isParameterPresent>
+	</select>
+		
+	<update id="doUpdate" parameterClass="sysuserEmpVO">
+		UPDATE T_SYSUSER_EMP SET c_emp_cde=#empCde#<dynamic><isParameterPresent><isPropertyAvailable property="empNme"><isNotNull prepend="," property="empNme">c_emp_nme=#empNme# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="dptCde"><isNotNull prepend="," property="dptCde">c_dpt_cde=#dptCde# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="dptNme"><isNotNull prepend="," property="dptNme">c_dpt_nme=#dptNme# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="passwd"><isNotNull prepend="," property="passwd">c_passwd=#passwd# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="mobile"><isNotNull prepend="," property="mobile">c_mobile=#mobile# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="isValid"><isNotNull prepend="," property="isValid">c_is_valid=#isValid# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="bgnTm"><isNotNull prepend="," property="bgnTm">t_bgn_tm=to_date(#bgnTm#,'yyyy-MM-dd') </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="endTm"><isNotNull prepend="," property="endTm">t_end_tm=to_date(#endTm#,'yyyy-MM-dd') </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="sysuserInfo"><isNotNull prepend="," property="sysuserInfo">c_sysuser_info=#sysuserInfo# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="sysuserMenu"><isNotNull prepend="," property="sysuserMenu">c_sysuser_menu=#sysuserMenu# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="plyDptMenu"><isNotNull prepend="," property="plyDptMenu">c_ply_dpt_menu=#plyDptMenu# </isNotNull></isPropertyAvailable>
+		</isParameterPresent></dynamic> WHERE c_emp_cde=#empCde#
+	</update>
+	
+	<insert id="doInsert" parameterClass="sysuserEmpVO">
+		INSERT INTO T_SYSUSER_EMP<dynamic><isParameterPresent>( c_emp_cde<isPropertyAvailable property="empNme"><isNotNull prepend="," property="empNme">c_emp_nme</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="dptCde"><isNotNull prepend="," property="dptCde">c_dpt_cde</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="dptNme"><isNotNull prepend="," property="dptNme">c_dpt_nme</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="passwd"><isNotNull prepend="," property="passwd">c_passwd</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="mobile"><isNotNull prepend="," property="mobile">c_mobile</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="isValid"><isNotNull prepend="," property="isValid">c_is_valid</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="bgnTm"><isNotNull prepend="," property="bgnTm">t_bgn_tm</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="endTm"><isNotNull prepend="," property="endTm">t_end_tm</isNotNull></isPropertyAvailable>
+		
+		<isPropertyAvailable property="createtime"><isNotNull prepend="," property="createtime">C_CREATE_TIME</isNotNull></isPropertyAvailable>
+		
+		<isPropertyAvailable property="sysuserInfo"><isNotNull prepend="," property="sysuserInfo">c_sysuser_info</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="sysuserMenu"><isNotNull prepend="," property="sysuserMenu">c_sysuser_menu</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="plyDptMenu"><isNotNull prepend="," property="plyDptMenu">c_ply_dpt_menu</isNotNull></isPropertyAvailable>
+		) VALUES(#empCde#<isPropertyAvailable property="empNme"><isNotNull prepend="," property="empNme">#empNme#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="dptCde"><isNotNull prepend="," property="dptCde">#dptCde#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="dptNme"><isNotNull prepend="," property="dptNme">#dptNme#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="passwd"><isNotNull prepend="," property="passwd">#passwd#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="mobile"><isNotNull prepend="," property="mobile">#mobile#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="isValid"><isNotNull prepend="," property="isValid">#isValid#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="bgnTm"><isNotNull prepend="," property="bgnTm">to_date(#bgnTm#,'yyyy-MM-dd')</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="endTm"><isNotNull prepend="," property="endTm">to_date(#endTm#,'yyyy-MM-dd')</isNotNull></isPropertyAvailable>
+		
+		<isPropertyAvailable property="createtime"><isNotNull prepend="," property="createtime">to_date(#createtime#,'yyyy-MM-dd hh24:mi:ss')</isNotNull></isPropertyAvailable>
+		
+		<isPropertyAvailable property="sysuserInfo"><isNotNull prepend="," property="sysuserInfo">#sysuserInfo#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="sysuserMenu"><isNotNull prepend="," property="sysuserMenu">#sysuserMenu#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="plyDptMenu"><isNotNull prepend="," property="plyDptMenu">#plyDptMenu#</isNotNull></isPropertyAvailable>
+		)</isParameterPresent></dynamic>
+	</insert>
+	
+	<select id="toView" resultMap="sysUserEmpRS" parameterClass="java.lang.String">
+		select * from T_SYSUSER_EMP where c_emp_cde = #empCde#
+	</select>
+	
+	<delete id ="doDelete" parameterClass="java.lang.String">
+		delete T_SYSUSER_EMP where c_emp_cde=#empCde#
+	</delete>
+	
+	<select id="getEmpByEmpCde" resultMap="sysUserEmpRS" parameterClass="sysUserEmpVO">
+		select * from t_sysuser_emp where c_emp_cde = #empCde#
+	</select>	 
+	
+	<select id="getEmpByEmpCdeStagance" resultMap="sysUserEmpRS" parameterClass="sysUserEmpVO">
+		select * from t_sysuser_emp where c_emp_cde = #empCde#
+	</select>	
+	
+	<update id="UpdateMenuId" parameterClass="sysUserEmpVO">
+		update t_sysuser_emp set 
+			c_sysuser_menu=#sysuserMenu#
+		where C_EMP_CDE=#empCde#
+	</update>
+	
+	<update id="updatePassWord" parameterClass="sysUserEmpVO">
+		update t_sysuser_emp set 
+			c_passwd=#passwd#
+		where C_EMP_CDE=#empCde#
+	</update>
+	
+</sqlMap>
+
+

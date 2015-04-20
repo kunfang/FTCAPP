@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="tmblLog">
+	<typeAlias alias="tmblLogVO" type="com.ftc.vo.MobileLogVO" />
+
+	<cacheModel id="oneDayUrgerType" type="LRU">
+		<flushInterval hours="24" />
+	</cacheModel>
+	<resultMap id="tmblLog" class="tmblLogVO">
+		<result property="logid" column="N_LOG_ID" />		
+		<result property="reqEmp" column="C_REQ_EMP" />
+		
+		<result property="reqDpt" column="C_REQ_DPT" />
+		<result property="reqTm" column="T_REQ_TM"/>
+		<result property="reqContext" column="C_REQ_CONTEXT"/>
+		<result property="successFlag" column="C_SUCCESS_FLAG" />
+		<result property="resContext" column="C_RES_CONTEXT" />
+		
+		<result property="tel" column="C_TEL" />
+		<result property="insertCde" column="C_INSRNT_CDE" />
+		<result property="specificType" column="C_TYPE" />
+		<result property="transactionType" column="C_TRANSACTION_TYPE" />
+		<result property="createTm" column="T_CREATE_TM" />
+		<result property="createCde" column="C_CREATE_CDE" />
+		<result property="updateTm" column="T_UPDATE_TM" />
+		<result property="updateCde" column="C_UPDATE_CDE" />
+	</resultMap>
+		
+	
+	 
+	<insert id="doInsertLog" parameterClass="tmblLogVO">
+		INSERT INTO T_MOBILE_LOG<dynamic><isParameterPresent>( N_LOG_ID
+		<isPropertyAvailable property="reqEmp"><isNotNull prepend="," property="reqEmp">C_REQ_EMP</isNotNull></isPropertyAvailable>		
+		<isPropertyAvailable property="reqDpt"><isNotNull prepend="," property="reqDpt">C_REQ_DPT</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="reqTm"><isNotNull prepend="," property="reqTm">T_REQ_TM</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="reqContext"><isNotNull prepend="," property="reqContext">C_REQ_CONTEXT</isNotNull></isPropertyAvailable>		
+		<isPropertyAvailable property="successFlag"><isNotNull prepend="," property="successFlag">C_SUCCESS_FLAG</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="resContext"><isNotNull prepend="," property="resContext">C_RES_CONTEXT</isNotNull></isPropertyAvailable>		
+		<isPropertyAvailable property="tel"><isNotNull prepend="," property="tel">C_TEL</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="insertCde"><isNotNull prepend="," property="insertCde">C_INSRNT_CDE</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="specificType"><isNotNull prepend="," property="specificType">C_TYPE</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="transactionType"><isNotNull prepend="," property="transactionType">C_TRANSACTION_TYPE</isNotNull></isPropertyAvailable>		
+		<isPropertyAvailable property="createTm"><isNotNull prepend="," property="createTm">T_CREATE_TM</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="createCde"><isNotNull prepend="," property="createCde">C_CREATE_CDE</isNotNull></isPropertyAvailable>		
+		<isPropertyAvailable property="updateTm"><isNotNull prepend="," property="updateTm">T_UPDATE_TM</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="updateCde"><isNotNull prepend="," property="updateCde">C_UPDATE_CDE</isNotNull></isPropertyAvailable>
+		
+		) VALUES(TMBL_MOBILE_LOG_ID.nextval
+		<isPropertyAvailable property="reqEmp"><isNotNull prepend="," property="reqEmp">#reqEmp#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="reqDpt"><isNotNull prepend="," property="reqDpt">#reqDpt#</isNotNull></isPropertyAvailable>
+		
+		<isPropertyAvailable property="reqTm"><isNotNull prepend="," property="reqTm">to_date(#reqTm#,'yyyy-MM-dd hh24:mi:ss')</isNotNull></isPropertyAvailable>
+		
+		<isPropertyAvailable property="reqContext"><isNotNull prepend="," property="reqContext">#reqContext#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="successFlag"><isNotNull prepend="," property="successFlag">#successFlag#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="resContext"><isNotNull prepend="," property="resContext">#resContext#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="tel"><isNotNull prepend="," property="tel">#tel#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="insertCde"><isNotNull prepend="," property="insertCde">#insertCde#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="specificType"><isNotNull prepend="," property="specificType">#specificType#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="transactionType"><isNotNull prepend="," property="transactionType">#transactionType#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="createTm"><isNotNull prepend="," property="createTm">to_date(#createTm#,'yyyy-MM-dd hh24:mi:ss')</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="createCde"><isNotNull prepend="," property="createCde">#createCde#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="updateTm"><isNotNull prepend="," property="updateTm">to_date(#updateTm#,'yyyy-MM-dd hh24:mi:ss')</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="updateCde"><isNotNull prepend="," property="updateCde">#updateCde#</isNotNull></isPropertyAvailable>
+		 
+		)</isParameterPresent></dynamic>
+	</insert>
+	
+	 
+</sqlMap>
+
+

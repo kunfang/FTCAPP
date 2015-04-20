@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="distinct">
+	<typeAlias alias="distinctVO" type="com.ftc.vo.DistinctVO" />
+
+	<cacheModel id="oneDayUrgerType" type="LRU">
+		<flushInterval hours="24" />
+	</cacheModel>
+	<resultMap id="distinctRS" class="distinctVO">
+	    <result property="workerId" column="WorkerId" />
+		<result property="districtId" column="Districtid" />
+		<result property="districtName" column="DistrictName" />
+        <result property="districtNameEn" column="DistrictNameEn" />
+	</resultMap>
+	
+	<select id="getDistinctById" resultMap="distinctRS" parameterClass="distinctVO">
+		select a1.WorkerId,a1.Districtid,b1.DistrictName,b1.DistrictNameEn from 
+              (select a1.WorkerId,a1.Districtid,a1.status from b_worker_districtid a1
+               group by a1.WorkerId,a1.Districtid,a1.status) a1,b_districtid b1
+          where a1.Districtid=b1.DistrictId and a1.status=41 and a1.WorkerId=#workerId#
+	</select>
+	
+</sqlMap>
+
+

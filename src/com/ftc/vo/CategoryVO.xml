@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="category">
+	<typeAlias alias="categoryVO" type="com.ftc.vo.CategoryVO" />
+	<typeAlias alias="statusVO" type="com.ftc.vo.StatusVO" />
+
+	<cacheModel id="oneDayUrgerType" type="LRU">
+		<flushInterval hours="24" />
+	</cacheModel>
+	<resultMap id="categoryRS" class="categoryVO">
+		<result property="categoryId" column="categoryId" />
+		<result property="categoryName" column="categoryName" />
+	</resultMap>
+	
+	<resultMap id="statusRS" class="statusVO">
+		<result property="value" column="Value" />
+		<result property="statusName" column="StatusName" />
+		<result property="category" column="Category" />
+		<result property="comments" column="Comments" />
+	</resultMap>
+	
+	
+	<select id="getCateByPcode" resultMap="categoryRS" parameterClass="string">
+		select * from b_product_category a where 1=1 $sqlWhere$ order by a.categoryid
+	</select>
+	
+	<select id="getStatusByType" resultMap="statusRS" parameterClass="statusVO">
+		select * from b_status a where 1=1 and a.Category=#category# order by a.value desc
+	</select>
+	
+	
+</sqlMap>
+
+

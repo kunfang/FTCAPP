@@ -1,0 +1,146 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="product">
+	<typeAlias alias="productVO" type="com.ftc.vo.ProductVO" />
+	<typeAlias alias="productPageVO" type="com.ftc.vo.ProductPageVO" />
+
+	<cacheModel id="oneDayUrgerType" type="LRU">
+		<flushInterval hours="24" />
+	</cacheModel>
+	<resultMap id="productRS" class="productVO">
+		<result property="productid" column="productid" />
+		<result property="prodName" column="productName" />
+		<result property="price" column="price" />
+		<result property="storePrice" column="storePrice" />
+		<result property="categoryId" column="categoryId" />
+		<result property="picture" column="picture" />
+		<result property="timeConsume" column="TimeConsume" />
+		<result property="timeKeep" column="timeKeep" />
+		<result property="comments" column="comments" />
+	</resultMap>
+	
+	<resultMap id="productPageRS" class="productPageVO">
+		<result property="productid" column="productid" />
+		<result property="prodName" column="productName" />
+		<result property="price" column="price" />
+		<result property="storePrice" column="storePrice" />
+		<result property="categoryId" column="categoryId" />
+		<result property="picture" column="picture" />
+		<result property="timeConsume" column="TimeConsume" />
+		<result property="timeKeep" column="timeKeep" />
+		<result property="comments" column="comments" />
+		<result property="categoryName" column="categoryName" />
+		<result property="fileType" column="fileType" />
+		<result property="filetypeName" column="filetypeName" />
+		<result property="beginDate" column="begindate" />
+		<result property="endDate" column="enddate" />
+		<result property="createdate" column="createdate" />
+		<result property="status" column="status" />
+		<result property="statusName" column="statusname" />
+		<result property="datelastupdate" column="timestamp" />
+		<result property="totalNum" column="numbers" />
+	</resultMap>
+		
+	
+	<select id="toList" resultMap="productRS" parameterClass="productVO">
+		SELECT * FROM b_product 
+		 WHERE 1=1 <isParameterPresent>
+		<isPropertyAvailable property="productid"><isNotNull property="productid"><isNotEmpty prepend="AND" property="productid"> productid = #productid#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="prodName"><isNotNull property="prodName"><isNotEmpty prepend="AND" property="prodName"> productName LIKE '%' || #prodName# || '%' </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="price"><isNotNull property="price"><isNotEmpty prepend="AND" property="price"> price = #price#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="storePrice"><isNotNull property="storePrice"><isNotEmpty prepend="AND" property="storePrice"> storePrice = #storePrice#</isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="picture"><isNotNull property="picture"><isNotEmpty prepend="AND" property="picture"> picture = #picture# </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="timeConsume"><isNotNull property="timeConsume"><isNotEmpty prepend="AND" property="timeConsume"> timeConsume LIKE '%' || #timeConsume# || '%' </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="timeKeep"><isNotNull property="timeKeep"><isNotEmpty prepend="AND" property="timeKeep"> timeKeep LIKE '%' || #timeKeep# || '%' </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="comments"><isNotNull property="comments"><isNotEmpty prepend="AND" property="comments"> comments LIKE '%' || #comments# || '%'</isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="orderFid"><isNotNull property="orderFid"><isNotEmpty prepend=" ORDER BY " property="orderFid"> $orderFid$ </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="orderType"><isNotNull property="orderType"><isNotEmpty prepend="  " property="orderType"> $orderType$ </isNotEmpty></isNotNull></isPropertyAvailable>
+		</isParameterPresent>
+	</select>
+	
+	<select id="getTotalCount" resultClass="int" parameterClass="string">
+		SELECT count(a.productid) from b_product a left join b_product_category b on a.categoryid = b.categoryid
+                         left join b_file c on a.picture=c.fileid
+                         left join b_status d on c.status=d.value and d.category='FileStatus'
+                         left join b_status e on c.filetype=e.value and e.category='FileType'
+                         left join (select count(c.userid) as numbers,c.productid from
+                         (select b.userid,b.productid from r_orderdetail b group by b.productid,b.userid) c group by c.productid) h
+			on a.productid=h.productid
+        where 1=1 $sqlWhere$
+	</select>
+		
+	<update id="doUpdate" parameterClass="productVO">
+		UPDATE b_product SET productid=#productid#<dynamic><isParameterPresent>
+		<isPropertyAvailable property="prodName"><isNotNull prepend="," property="prodName">productName=#prodName# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="price"><isNotNull prepend="," property="price">price=#price# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="storePrice"><isNotNull prepend="," property="storePrice">storePrice=#storePrice# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="categoryId"><isNotNull prepend="," property="categoryId">categoryId=#categoryId# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="picture"><isNotNull prepend="," property="picture">picture=#picture# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="timeConsume"><isNotNull prepend="," property="timeConsume">timeConsume=#timeConsume# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="timeKeep"><isNotNull prepend="," property="timeKeep">timeKeep=#timeKeep# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="comments"><isNotNull prepend="," property="comments">comments=#comments# </isNotNull></isPropertyAvailable>
+		</isParameterPresent></dynamic> WHERE productid=#productid#
+	</update>
+	
+	<insert id="doInsert" parameterClass="productVO">
+		INSERT INTO b_product<dynamic><isParameterPresent>(productName
+		<isPropertyAvailable property="price"><isNotNull prepend="," property="price">price</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="storePrice"><isNotNull prepend="," property="storePrice">storePrice</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="categoryId"><isNotNull prepend="," property="categoryId">categoryId</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="picture"><isNotNull prepend="," property="picture">picture</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="timeConsume"><isNotNull prepend="," property="timeConsume">timeConsume</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="timeKeep"><isNotNull prepend="," property="timeKeep">timeKeep</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="comments"><isNotNull prepend="," property="comments">comments</isNotNull></isPropertyAvailable>
+		) VALUES(#prodName#
+		<isPropertyAvailable property="price"><isNotNull prepend="," property="price">#price#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="storePrice"><isNotNull prepend="," property="storePrice">#storePrice#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="categoryId"><isNotNull prepend="," property="categoryId">#categoryId#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="picture"><isNotNull prepend="," property="picture">#picture#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="timeConsume"><isNotNull prepend="," property="timeConsume">#timeConsume#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="timeKeep"><isNotNull prepend="," property="timeKeep">#timeKeep#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="comments"><isNotNull prepend="," property="comments">#comments#</isNotNull></isPropertyAvailable>
+		)</isParameterPresent></dynamic> 
+	</insert>
+	
+	<delete id="doProdDelete" parameterClass="productVO">
+ 		delete from b_product where productid=#productid# 
+ 	</delete>
+	
+	<select id="getProductByPcode" resultMap="productRS" parameterClass="string">
+		select * from b_product  $sqlWhere$ order by productid,productName
+	</select>
+	
+	<select id="getProductByAll" resultMap="productPageRS" parameterClass="string">
+		select a.productid,
+		       a.productname,
+		       a.price,
+		       a.storeprice,
+		       a.categoryid,
+		       b.categoryname,
+		       a.picture,
+		       a.timeconsume,
+		       a.timekeep,
+		       a.comments,
+		       date_format(c.begindate,'%Y-%m-%d') as begindate,
+               date_format(c.enddate,'%Y-%m-%d') as enddate,
+		       c.createdate,
+		       d.value as status,
+		       d.statusname,
+		       c.timestamp,
+               e.statusname as filetypeName,
+               c.filetype,
+               h.numbers
+        from b_product a left join b_product_category b on a.categoryid = b.categoryid
+                         left join b_file c on a.picture=c.fileid
+                         left join b_status d on c.status=d.value and d.category='FileStatus'
+                         left join b_status e on c.filetype=e.value and e.category='FileType'
+                         left join (select count(c.userid) as numbers,c.productid from
+(select b.userid,b.productid from r_orderdetail b group by b.productid,b.userid) c group by c.productid) h
+			on a.productid=h.productid
+        where 1=1 $sqlWhere$ order by a.productid,b.categoryname asc
+	</select>
+	
+</sqlMap>
+
+

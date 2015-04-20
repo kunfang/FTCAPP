@@ -1,0 +1,163 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="worker">
+	<typeAlias alias="workerVO" type="com.ftc.vo.WorkerVO" />
+    <typeAlias alias="workerPageVO" type="com.ftc.vo.WorkPageVO" />
+	<cacheModel id="oneDayUrgerType" type="LRU">
+		<flushInterval hours="24" />
+	</cacheModel>
+	<resultMap id="workerRS" class="workerVO">
+		<result property="workerId" column="WorkerId" />
+		<result property="workerName" column="WorkerName" />
+		<result property="mobile" column="Mobile" />
+		<result property="serve" column="Serve" />
+		<result property="specialtyRating" column="SpecialtyRating" />
+		<result property="communicateRating" column="CommunicateRating" />
+		<result property="punctualRating" column="PunctualRating" />
+		<result property="levels" column="Levels" />
+		<result property="status" column="Status" />
+		<result property="timestamp" column="TimeStamp" />
+		<result property="introduce" column="introduce" />
+		<result property="infrom" column="infrom" />
+		<result property="likes" column="likes" />
+		<result property="star" column="starDesc" />
+	</resultMap>
+	
+	<resultMap id="workerPageRS" class="workerPageVO">
+		<result property="workerId" column="WorkerId" />
+		<result property="workerName" column="WorkerName" />
+		<result property="mobile" column="Mobile" />
+		<result property="serve" column="Serve" />
+		<result property="specialtyRating" column="SpecialtyRating" />
+		<result property="communicateRating" column="CommunicateRating" />
+		<result property="punctualRating" column="PunctualRating" />
+		<result property="levels" column="Levels" />
+		<result property="levelsDesc" column="LevelsDesc" />
+		<result property="status" column="Status" />
+		<result property="statusname" column="Statusname" />
+		<result property="timestamp" column="TimeStamp" />
+		<result property="introduce" column="introduce" />
+		<result property="infrom" column="infrom" />
+		<result property="likes" column="likes" />
+		<result property="star" column="star" />
+		<result property="starDesc" column="starDesc" />
+		<result property="total" column="total" />
+		<result property="distinctDesc" column="distinctDesc" />
+	</resultMap>
+	
+	<select id="toList" resultMap="workerRS" parameterClass="workerVO">
+		SELECT *
+		  FROM b_worker a
+		 WHERE 1=1 <isParameterPresent>
+		<isPropertyAvailable property="workerId"><isNotNull property="workerId"><isNotEmpty prepend="AND" property="workerId"> WorkerId = #workerId#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="workerName"><isNotNull property="workerName"><isNotEmpty prepend="AND" property="workerName"> WorkerName LIKE '%' || #workerName# || '%' </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="Status"><isNotNull property="Status"><isNotEmpty prepend="AND" property="Status"> Status =#Status#</isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="orderFid"><isNotNull property="orderFid"><isNotEmpty prepend=" ORDER BY " property="orderFid"> $orderFid$ </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="orderType"><isNotNull property="orderType"><isNotEmpty prepend="  " property="orderType"> $orderType$ </isNotEmpty></isNotNull></isPropertyAvailable>
+		</isParameterPresent>
+	</select>
+	
+	<select id="getTotalCount" resultClass="int" parameterClass="string">
+		SELECT count(a.WorkerId) 
+		           from b_worker a left join b_status d on a.status=d.value and d.category='FileStatus'
+		                           left join (select a1.WorkerId,(sum(b1.Price)/count(a1.ProductId)) as total from b_worker_product a1,b_product b1
+                                               where a1.ProductId=b1.ProductId group by a1.WorkerId) h on a.WorkerId =h.WorkerId
+                                   left join b_status g on a.Levels=g.value and g.category='DescType'
+                                   left join b_status i on a.starDesc=i.value and i.category='StarType'
+        where 1=1 $sqlWhere$ 
+	</select>
+	
+	<select id="selectOrderNumber" resultClass="int" parameterClass="string">
+	    select count(a.orderId) from (select b1.orderId,b1.userId from r_orderdetail b1 
+                                      group by b1.orderId,b1.userId) a left join b_worker b on a.userId=b.WorkerId  
+                                      where 1=1 $sqlWhere$
+    </select>
+    
+	 <update id="doUpdate" parameterClass="workerVO">
+		UPDATE b_worker SET WorkerId=#workerId#<dynamic><isParameterPresent>
+		<isPropertyAvailable property="workerName"><isNotNull prepend="," property="workerName">WorkerName=#workerName# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="mobile"><isNotNull prepend="," property="mobile">Mobile=#mobile# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="serve"><isNotNull prepend="," property="serve">Serve=#serve# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="specialtyRating"><isNotNull prepend="," property="specialtyRating">SpecialtyRating=#specialtyRating# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="communicateRating"><isNotNull prepend="," property="communicateRating">CommunicateRating=#communicateRating# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="punctualRating"><isNotNull prepend="," property="punctualRating">PunctualRating=#punctualRating# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="levels"><isNotNull prepend="," property="levels">Levels=#levels# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="status"><isNotNull prepend="," property="status">Status=#status# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="introduce"><isNotNull prepend="," property="introduce">introduce=#introduce# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="infrom"><isNotNull prepend="," property="infrom">infrom=#infrom# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="likes"><isNotNull prepend="," property="likes">likes=#likes# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="star"><isNotNull prepend="," property="star">starDesc=#star# </isNotNull></isPropertyAvailable>
+		</isParameterPresent></dynamic> WHERE WorkerId=#workerId#
+	</update>  
+	
+	<insert id="doInsert" parameterClass="workerVO">
+		INSERT INTO b_worker<dynamic><isParameterPresent>(WorkerName
+			<isPropertyAvailable property="mobile"><isNotNull prepend="," property="mobile">Mobile</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="serve"><isNotNull prepend="," property="serve">Serve</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="specialtyRating"><isNotNull prepend="," property="specialtyRating">SpecialtyRating</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="communicateRating"><isNotNull prepend="," property="communicateRating">CommunicateRating</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="punctualRating"><isNotNull prepend="," property="punctualRating">PunctualRating</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="levels"><isNotNull prepend="," property="levels">Levels</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="status"><isNotNull prepend="," property="status">Status</isNotNull></isPropertyAvailable>
+			,TimeStamp
+			<isPropertyAvailable property="introduce"><isNotNull prepend="," property="introduce">introduce</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="infrom"><isNotNull prepend="," property="infrom">infrom</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="likes"><isNotNull prepend="," property="likes">likes</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="star"><isNotNull prepend="," property="star">starDesc</isNotNull></isPropertyAvailable>
+		) VALUES(#workerName#
+			<isPropertyAvailable property="mobile"><isNotNull prepend="," property="mobile">#mobile#</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="serve"><isNotNull prepend="," property="serve">#serve#</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="specialtyRating"><isNotNull prepend="," property="specialtyRating">#specialtyRating#</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="communicateRating"><isNotNull prepend="," property="communicateRating">#communicateRating#</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="punctualRating"><isNotNull prepend="," property="punctualRating">#punctualRating#</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="levels"><isNotNull prepend="," property="levels">#levels#</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="status"><isNotNull prepend="," property="status">#status#</isNotNull></isPropertyAvailable>
+			,now()
+			<isPropertyAvailable property="introduce"><isNotNull prepend="," property="introduce">#introduce#</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="infrom"><isNotNull prepend="," property="infrom">#infrom#</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="likes"><isNotNull prepend="," property="likes">#likes#</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="star"><isNotNull prepend="," property="star">#star#</isNotNull></isPropertyAvailable>
+		)</isParameterPresent></dynamic>
+		
+	</insert>  
+	
+	<delete id="doWorkDelete" parameterClass="workerVO">
+ 		delete from b_worker where WorkerId=#workerId# 
+ 	</delete>
+	
+	<select id="getProductByPcode" resultMap="workerRS" parameterClass="string">
+		select * from b_worker  $sqlWhere$ order by WorkerId,WorkerName
+	</select>
+	
+	<select id="getProductByAll" resultMap="workerPageRS" parameterClass="string">
+		select a.WorkerId,
+		       a.WorkerName,
+		       a.Mobile,
+		       a.Serve,
+		       a.SpecialtyRating,
+		       a.CommunicateRating,
+		       a.PunctualRating,
+		       a.Levels,
+		       g.statusname as LevelsDesc,
+		       a.introduce,
+		       a.infrom,
+			   a.likes,
+			   a.starDesc as star,
+			   i.statusname as starDesc,
+		       d.value as status,
+		       d.statusname,
+		       date_format(a.TimeStamp,'%Y-%m-%d') as TimeStamp,
+		       h.total,
+		       '' as distinctDesc
+        from b_worker a left join b_status d on a.status=d.value and d.category='FileStatus'
+                        left join (select a1.WorkerId,(sum(b1.Price)/count(a1.ProductId)) as total from b_worker_product a1,b_product b1
+                                    where a1.ProductId=b1.ProductId group by a1.WorkerId) h on a.WorkerId =h.WorkerId
+                        left join b_status g on a.Levels=g.value and g.category='DescType'
+                        left join b_status i on a.starDesc=i.value and i.category='StarType'
+        where 1=1 $sqlWhere$ order by a.WorkerId,a.TimeStamp asc
+	</select>
+	
+</sqlMap>
+
+

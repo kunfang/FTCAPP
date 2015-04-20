@@ -1,0 +1,82 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="fileVo">
+	<typeAlias alias="fileVO" type="com.ftc.vo.FileVO" />
+	
+	<cacheModel id="oneDayUrgerType" type="LRU">
+		<flushInterval hours="24" />
+	</cacheModel>
+	<resultMap id="fileRS" class="fileVO">
+		<result property="fileId" column="Fileid" />
+		<result property="fileType" column="FileType" />
+		<result property="fileName" column="FileName" />
+		<result property="fileUrl" column="fileUrl" />
+		<result property="size" column="Size" />
+		<result property="beginDate" column="Begindate" />
+		<result property="endDate" column="EndDate" />
+		<result property="createDate" column="CreateDate" />
+		<result property="status" column="Status" />
+		<result property="datelastupdate" column="TimeStamp" />
+	</resultMap>
+	
+	<insert id="doInsert" parameterClass="fileVO">
+		INSERT INTO b_file<dynamic><isParameterPresent>(FileType
+		<isPropertyAvailable property="fileName"><isNotNull prepend="," property="fileName">FileName</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="fileUrl"><isNotNull prepend="," property="fileUrl">fileUrl</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="size"><isNotNull prepend="," property="size">Size</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="beginDate"><isNotNull prepend="," property="beginDate">Begindate</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="endDate"><isNotNull prepend="," property="endDate">EndDate</isNotNull></isPropertyAvailable>
+		,CreateDate
+		<isPropertyAvailable property="status"><isNotNull prepend="," property="status">Status</isNotNull></isPropertyAvailable>
+		,TimeStamp
+		) VALUES(#fileType#
+		<isPropertyAvailable property="fileName"><isNotNull prepend="," property="fileName">#fileName#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="fileUrl"><isNotNull prepend="," property="fileUrl">#fileUrl#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="size"><isNotNull prepend="," property="size">#size#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="beginDate"><isNotNull prepend="," property="beginDate">date_format(#beginDate#,'%Y-%m-%d')</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="endDate"><isNotNull prepend="," property="endDate">date_format(#endDate#,'%Y-%m-%d')</isNotNull></isPropertyAvailable>
+		,now()
+		<isPropertyAvailable property="status"><isNotNull prepend="," property="status">#status#</isNotNull></isPropertyAvailable>
+		,now()
+		)</isParameterPresent></dynamic>
+	</insert>
+	
+	
+	<update id="doUpdate" parameterClass="fileVO">
+		UPDATE b_file SET Fileid=#fileId#<dynamic><isParameterPresent>
+		<isPropertyAvailable property="fileType"><isNotNull prepend="," property="fileType">FileType=#fileType# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="fileName"><isNotNull prepend="," property="fileName">FileName=#fileName# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="fileUrl"><isNotNull prepend="," property="fileUrl">fileUrl=#fileUrl# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="size"><isNotNull prepend="," property="size">Size=#size# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="beginDate"><isNotNull prepend="," property="beginDate">Begindate=date_format(#beginDate#,'%Y-%m-%d') </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="endDate"><isNotNull prepend="," property="endDate">EndDate=date_format(#endDate#,'%Y-%m-%d') </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="status"><isNotNull prepend="," property="status">Status=#status#</isNotNull></isPropertyAvailable>
+		,TimeStamp=now()
+		</isParameterPresent></dynamic> WHERE Fileid=#fileId#
+	</update>
+	
+	
+	<delete id="doProdDelete" parameterClass="fileVO">
+ 		delete from b_file where Fileid=#fileId#
+ 	</delete>
+ 	
+ 	<select id="toFile" resultMap="fileRS" parameterClass="fileVO">
+		SELECT * FROM b_file 
+		 WHERE 1=1 <isParameterPresent>
+		<isPropertyAvailable property="fileId"><isNotNull property="fileId"><isNotEmpty prepend="AND" property="fileId"> Fileid = #fileId# </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="fileType"><isNotNull property="fileType"><isNotEmpty prepend="AND" property="fileType"> FileType = #fileType# </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="fileName"><isNotNull property="fileName"><isNotEmpty prepend="AND" property="fileName"> FileName =#fileName# </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="fileUrl"><isNotNull property="fileUrl"><isNotEmpty prepend="AND" property="fileUrl"> fileUrl = #fileUrl#   </isNotEmpty></isNotNull></isPropertyAvailable>
+		</isParameterPresent>
+	</select>
+	
+	<select id="toFileById" resultMap="fileRS" parameterClass="fileVO">
+		SELECT * FROM b_file WHERE 1=1 and Fileid = #fileId#
+		 
+	</select>
+	
+	
+</sqlMap>
+
+

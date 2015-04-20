@@ -1,0 +1,139 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="sysDict">
+	<typeAlias alias="sysDictVO" type="com.ftc.vo.SysDictVO" />
+
+	<cacheModel id="oneDayUrgerType" type="LRU">
+		<flushInterval hours="24" />
+	</cacheModel>
+	
+	<resultMap id="sysDictRS" class="sysDictVO">
+		<result property="dataCode" column="c_data_code" />
+		<result property="dataType" column="c_data_type" />
+		<result property="dataName" column="c_data_name" />
+		<result property="parCode" column="c_par_code" />
+		<result property="vaild" column="c_vaild" />
+		<result property="outerCode" column="c_outer_code" />
+		<result property="extendCode" column="c_extend_code" />
+		<result property="remark" column="c_remark" />
+		<result property="invaildTm" column="c_invaild_tm" />
+		<result property="creater" column="T_CREATED_DATE" />
+		<result property="createTm" column="t_create_tm" />
+		<result property="validFlag" column="C_VALID_FLAG" />
+		<result property="updater" column="c_update_nme" />
+		<result property="updateTm" column="t_update_tm" />
+		 
+	</resultMap>
+		
+	<!--
+	<select id="toList" resultMap="sysDictRS" parameterClass="sysDictVO">
+		SELECT * FROM T_SYS_DICT 
+		 WHERE 1=1 <isParameterPresent><isPropertyAvailable property="dataCode"><isNotNull property="dataCode"><isNotEmpty prepend="AND" property="dataCode"> c_data_code = #dataCode#</isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="dataType"><isNotNull property="dataType"><isNotEmpty prepend="AND" property="dataType"> c_data_type = #dataType# </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="dataName"><isNotNull property="dataName"><isNotEmpty prepend="AND" property="dataName"> c_data_name =#dataName#</isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="parCode"><isNotNull property="parCode"><isNotEmpty prepend="AND" property="parCode"> c_par_code = #parCode# </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="vaild"><isNotNull property="vaild"><isNotEmpty prepend="AND" property="vaild"> c_vaild = #vaild# </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="outerCode"><isNotNull property="outerCode"><isNotEmpty prepend="AND" property="outerCode"> c_outer_code= #outerCode# </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="extendCode"><isNotNull property="extendCode"><isNotEmpty prepend="AND" property="extendCode"> c_extend_code =#extendCode# </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="remark"><isNotNull property="remark"><isNotEmpty prepend="AND" property="remark"> c_remark =#remark#</isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="invaildTm"><isNotNull property="invaildTm"><isNotEmpty prepend="AND" property="invaildTm"> c_invaild_tm = to_date(#invaildTm#,'yyyy-MM-dd') </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="creater"><isNotNull property="creater"><isNotEmpty prepend="AND" property="creater"> c_creater LIKE = #creater# </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="createTm"><isNotNull property="createTm"><isNotEmpty prepend="AND" property="createTm"> t_create_tm = to_date(#createTm#,'yyyy-MM-dd') </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="orderFid"><isNotNull property="orderFid"><isNotEmpty prepend=" ORDER BY " property="orderFid"> $orderFid$ </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="orderType"><isNotNull property="orderType"><isNotEmpty prepend="  " property="orderType"> $orderType$ </isNotEmpty></isNotNull></isPropertyAvailable>
+		</isParameterPresent>
+	</select>
+	
+	<select id="getTotalCount" resultClass="int" parameterClass="sysDictVO">
+		SELECT count(c_data_code) FROM T_SYS_DICT 
+		 WHERE 1=1 <isParameterPresent><isPropertyAvailable property="dataCode"><isNotNull property="dataCode"><isNotEmpty prepend="AND" property="dataCode"> c_data_code = #dataCode#</isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="dataType"><isNotNull property="dataType"><isNotEmpty prepend="AND" property="dataType"> c_data_type = #dataType# </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="dataName"><isNotNull property="dataName"><isNotEmpty prepend="AND" property="dataName"> c_data_name =#dataName#</isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="parCode"><isNotNull property="parCode"><isNotEmpty prepend="AND" property="parCode"> c_par_code = #parCode# </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="vaild"><isNotNull property="vaild"><isNotEmpty prepend="AND" property="vaild"> c_vaild = #vaild# </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="outerCode"><isNotNull property="outerCode"><isNotEmpty prepend="AND" property="outerCode"> c_outer_code= #outerCode# </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="extendCode"><isNotNull property="extendCode"><isNotEmpty prepend="AND" property="extendCode"> c_extend_code =#extendCode# </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="remark"><isNotNull property="remark"><isNotEmpty prepend="AND" property="remark"> c_remark =#remark#</isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="invaildTm"><isNotNull property="invaildTm"><isNotEmpty prepend="AND" property="invaildTm"> c_invaild_tm = to_date(#invaildTm#,'yyyy-MM-dd') </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="creater"><isNotNull property="creater"><isNotEmpty prepend="AND" property="creater"> c_creater LIKE = #creater# </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="createTm"><isNotNull property="createTm"><isNotEmpty prepend="AND" property="createTm"> t_create_tm = to_date(#createTm#,'yyyy-MM-dd') </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="orderFid"><isNotNull property="orderFid"><isNotEmpty prepend=" ORDER BY " property="orderFid"> $orderFid$ </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="orderType"><isNotNull property="orderType"><isNotEmpty prepend="  " property="orderType"> $orderType$ </isNotEmpty></isNotNull></isPropertyAvailable>
+		</isParameterPresent>
+	</select>
+		
+	
+		
+	
+	
+	<insert id="doInsert" parameterClass="sysDictVO">
+		INSERT INTO T_SYS_DICT<dynamic><isParameterPresent>( c_data_code<isPropertyAvailable property="dataType"><isNotNull prepend="," property="dataType">c_data_type</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="dataName"><isNotNull prepend="," property="dataName">c_data_name</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="parCode"><isNotNull prepend="," property="parCode">c_par_code</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="vaild"><isNotNull prepend="," property="vaild">c_vaild</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="outerCode"><isNotNull prepend="," property="outerCode">c_outer_code</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="extendCode"><isNotNull prepend="," property="extendCode">c_extend_code</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="remark"><isNotNull prepend="," property="remark">c_remark</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="invaildTm"><isNotNull prepend="," property="invaildTm">c_invaild_tm</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="creater"><isNotNull prepend="," property="creater">c_creater</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="createTm"><isNotNull prepend="," property="createTm">t_create_tm</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="updater"><isNotNull prepend="," property="updater">c_updater</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="updateTm"><isNotNull prepend="," property="updateTm">t_update_tm</isNotNull></isPropertyAvailable>
+		) VALUES(S_c_data_code.nextval<isPropertyAvailable property="dataType"><isNotNull prepend="," property="dataType">#dataType#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="dataName"><isNotNull prepend="," property="dataName">#dataName#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="parCode"><isNotNull prepend="," property="parCode">#parCode#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="vaild"><isNotNull prepend="," property="vaild">#vaild#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="outerCode"><isNotNull prepend="," property="outerCode">#outerCode#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="extendCode"><isNotNull prepend="," property="extendCode">#extendCode#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="remark"><isNotNull prepend="," property="remark">#remark#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="invaildTm"><isNotNull prepend="," property="invaildTm">to_date(#invaildTm#,'yyyy-MM-dd')</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="creater"><isNotNull prepend="," property="creater">#creater#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="createTm"><isNotNull prepend="," property="createTm">to_date(#createTm#,'yyyy-MM-dd')</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="updater"><isNotNull prepend="," property="updater">#updater#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="updateTm"><isNotNull prepend="," property="updateTm">to_date(#updateTm#,'yyyy-MM-dd')</isNotNull></isPropertyAvailable>
+		)</isParameterPresent></dynamic>
+	</insert>
+	
+	<select id="getCodeList" resultMap="sysDictRS" parameterClass="java.lang.String">
+		select * from t_sys_dict where c_par_code like #value# order by c_data_code
+	</select>
+	<select id="DictTree" resultClass="hashmap">   
+    select  s.c_data_name as "name",
+           s.c_data_code as "id",
+           s.c_par_code as "pId",
+           s.c_extend_code as "leaf"
+		    from t_sys_dict s where 1=1  
+		   <isNotEmpty property="parCode">and s.c_par_code=#parCode#</isNotEmpty>   
+		    <isEmpty property="parCode">and c_par_code is null</isEmpty>   
+	</select>  
+		-->	
+		
+		
+		<update id="doUpdate" parameterClass="sysDictVO">
+		UPDATE T_SYS_DICT SET c_data_code=#dataCode#<dynamic><isParameterPresent><isPropertyAvailable property="dataType"><isNotNull prepend="," property="dataType">c_data_type=#dataType# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="dataName"><isNotNull prepend="," property="dataName">c_data_name=#dataName# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="parCode"><isNotNull prepend="," property="parCode">c_par_code=#parCode# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="vaild"><isNotNull prepend="," property="vaild">c_vaild=#vaild# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="outerCode"><isNotNull prepend="," property="outerCode">c_outer_code=#outerCode# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="extendCode"><isNotNull prepend="," property="extendCode">c_extend_code=#extendCode# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="remark"><isNotNull prepend="," property="remark">c_remark=#remark# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="invaildTm"><isNotNull prepend="," property="invaildTm">c_invaild_tm=to_date(#invaildTm#,'yyyy-MM-dd') </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="creater"><isNotNull prepend="," property="creater">c_creater=#creater# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="createTm"><isNotNull prepend="," property="createTm">t_create_tm=to_date(#createTm#,'yyyy-MM-dd') </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="updater"><isNotNull prepend="," property="updater">c_updater=#updater# </isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="updateTm"><isNotNull prepend="," property="updateTm">t_update_tm=to_date(#updateTm#,'yyyy-MM-dd') </isNotNull></isPropertyAvailable>
+		</isParameterPresent></dynamic> WHERE c_data_code=#dataCode#
+	</update>
+		
+		
+		   
+	<select id="getListByCondition" resultMap="sysDictRS" parameterClass="java.lang.String">
+		select * from t_sys_dict $sql$
+	</select>	
+	<select id="getouterCode" resultMap="sysDictRS" parameterClass="sysDictVO">
+		select * from t_sys_dict where c_outer_code = #outerCode#
+	</select>
+</sqlMap>
+
+

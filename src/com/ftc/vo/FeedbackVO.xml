@@ -1,0 +1,90 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="feedback">
+    <typeAlias alias="feedbackPageVO" type="com.ftc.vo.FeedbackPageVO" />
+    
+	<cacheModel id="oneDayUrgerType" type="LRU">
+		<flushInterval hours="24" />
+	</cacheModel>
+	
+	<resultMap id="feedbackPageRS" class="feedbackPageVO">
+		<result property="userId" column="UserID" />
+		<result property="userName" column="UserName" />
+		<result property="workerId" column="WorkerId" />
+		<result property="workerName" column="WorkerName" />
+		<result property="statusName" column="StatusName" />
+		<result property="workerName" column="WorkerName" />
+		<result property="comments" column="Comments" />
+		<result property="timeStamp" column="timeStamp" />
+		<result property="datelastupdate" column="datelastupdate" />
+	</resultMap>
+	
+	
+	
+	<select id="getTotalCount" resultClass="int" parameterClass="string">
+		SELECT count(b.UserID) 
+		            from r_worker_feedback a left join b_user b on a.UserID=b.UserId
+						 left join b_worker c on a.WorkerId=c.WorkerId
+						 left join b_status d on a.RatStatus=d.Value and d.Category='FeedBackType'
+	     where 1=1 $sqlWhere$
+	</select>
+	
+	
+	<!--  <insert id="doInsert" parameterClass="workerVO">
+		INSERT INTO b_worker<dynamic><isParameterPresent>(WorkerName
+			<isPropertyAvailable property="mobile"><isNotNull prepend="," property="mobile">Mobile</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="serve"><isNotNull prepend="," property="serve">Serve</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="specialtyRating"><isNotNull prepend="," property="specialtyRating">SpecialtyRating</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="communicateRating"><isNotNull prepend="," property="communicateRating">CommunicateRating</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="punctualRating"><isNotNull prepend="," property="punctualRating">PunctualRating</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="levels"><isNotNull prepend="," property="levels">Levels</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="status"><isNotNull prepend="," property="status">Status</isNotNull></isPropertyAvailable>
+			,TimeStamp
+			<isPropertyAvailable property="introduce"><isNotNull prepend="," property="introduce">introduce</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="infrom"><isNotNull prepend="," property="infrom">infrom</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="likes"><isNotNull prepend="," property="likes">likes</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="star"><isNotNull prepend="," property="star">starDesc</isNotNull></isPropertyAvailable>
+		) VALUES(#workerName#
+			<isPropertyAvailable property="mobile"><isNotNull prepend="," property="mobile">#mobile#</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="serve"><isNotNull prepend="," property="serve">#serve#</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="specialtyRating"><isNotNull prepend="," property="specialtyRating">#specialtyRating#</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="communicateRating"><isNotNull prepend="," property="communicateRating">#communicateRating#</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="punctualRating"><isNotNull prepend="," property="punctualRating">#punctualRating#</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="levels"><isNotNull prepend="," property="levels">#levels#</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="status"><isNotNull prepend="," property="status">#status#</isNotNull></isPropertyAvailable>
+			,now()
+			<isPropertyAvailable property="introduce"><isNotNull prepend="," property="introduce">#introduce#</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="infrom"><isNotNull prepend="," property="infrom">#infrom#</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="likes"><isNotNull prepend="," property="likes">#likes#</isNotNull></isPropertyAvailable>
+			<isPropertyAvailable property="star"><isNotNull prepend="," property="star">#star#</isNotNull></isPropertyAvailable>
+		)</isParameterPresent></dynamic>
+		
+	</insert>   
+	
+	<delete id="doWorkDelete" parameterClass="workerVO">
+ 		delete from b_worker where WorkerId=#workerId# 
+ 	</delete> -->
+	
+	
+	
+	<select id="getFeedbackByAll" resultMap="feedbackPageRS" parameterClass="string">
+		select b.UserID,
+		       b.UserName,
+	           c.WorkerId,
+	           c.WorkerName,
+               a.RatStatus,
+               d.StatusName,
+               a.Comments,
+               a.timeStamp,
+	           a.datelastupdate
+         from r_worker_feedback a left join b_user b on a.UserID=b.UserId
+						 left join b_worker c on a.WorkerId=c.WorkerId
+						 left join b_status d on a.RatStatus=d.Value and d.Category='FeedBackType'
+	     where 1=1 $sqlWhere$
+
+	</select>
+	
+</sqlMap>
+
+
