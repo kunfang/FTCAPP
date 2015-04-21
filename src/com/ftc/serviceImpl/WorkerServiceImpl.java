@@ -38,8 +38,9 @@ public class WorkerServiceImpl implements WorkerService{
 		if(wvo.getWorkerName()!=null && !"".equals(wvo.getWorkerName())){
 			sqlWhere=" and a.WorkerName like '%"+wvo.getWorkerName().trim()+"%'";
 		}
-		else if(wvo.getMobile()!=null && !"".equals(wvo.getMobile())){
-			sqlWhere=" and a.Mobile like '%"+wvo.getMobile().trim()+"%'";
+		
+	    if(wvo.getMobile()!=null && !"".equals(wvo.getMobile())){
+			sqlWhere+=" and a.Mobile like '%"+wvo.getMobile().trim()+"%'";
 		}
 		
 		int totalCount = dao.doTotalPageCount("worker.getTotalCount", sqlWhere);
@@ -60,6 +61,7 @@ public class WorkerServiceImpl implements WorkerService{
 		if(work!=null){
 			try {
 				dao.startTransaction();
+				dao.doDelete("worker.doFeedbackDelete", wvo);
 				dao.doDelete("worker.doWorkDelete", work);
 			} catch (Exception e) {
 				dao.endTransaction();
@@ -177,7 +179,6 @@ public class WorkerServiceImpl implements WorkerService{
 				workerVO.setStar(wvo.getStar());
 				String sqlWhere="and b.WorkerId="+wvo.getWorkerId();
 				int orderNum=dao.doTotalPageCount("worker.selectOrderNumber", sqlWhere);//计算接单数
-				System.out.println("number===="+orderNum);
 				workerVO.setServe(String.valueOf(orderNum));
 				dao.doUpdate("worker.doUpdate", workerVO);
 				dao.commitTransation();
@@ -194,26 +195,75 @@ public class WorkerServiceImpl implements WorkerService{
 		
 	}
 	@Override
-	public List<FeedbackPageVO> getFeedbackBywid(String workId) throws Exception {
+	public List<FeedbackPageVO> getFeedbackBywid(FeedbackPageVO feedbackPageVO) throws Exception {
 		if (logger.isDebugEnabled()) {
 			logger.debug("getFeedbackBywid(String) - start"); //$NON-NLS-1$
 		}
 		String sqlWhere="";
-		if(workId!=null && !"".equals(workId)){
-			sqlWhere=" and a.WorkerId ="+workId.trim();
+		if(feedbackPageVO.getWorkerId()!=null && !"".equals(feedbackPageVO.getWorkerId())){
+			sqlWhere=" and a.WorkerId ="+feedbackPageVO.getWorkerId().trim();
 		}
+		if(feedbackPageVO.getUserName()!=null && !"".equals(feedbackPageVO.getUserName())){
+			sqlWhere+=" and b.UserName like '%"+feedbackPageVO.getUserName().trim()+"%'";
+		}
+		if(feedbackPageVO.getWorkerName()!=null && !"".equals(feedbackPageVO.getWorkerName())){
+			sqlWhere+=" and c.WorkerName like '%"+feedbackPageVO.getWorkerName().trim()+"%'";
+		}
+		
 		String result="";
 		int totalCount = dao.doTotalPageCount("feedback.getTotalCount", sqlWhere);
 		List<FeedbackPageVO> list = dao.toList("feedback.getFeedbackByAll", sqlWhere);
 		for(int i=0;i<list.size();i++){
 			result=list.get(i).getComments().substring(0, 10)+"......";
 			list.get(i).setComments(result);
+			list.get(i).setFileUrl(list.get(i).getFileUrl()+list.get(i).getFileName());
 		}
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug("getFeedbackBywid(String) - end"); //$NON-NLS-1$
 		}
 		return list;
+	}
+	@Override
+	public FeedbackPageVO getFeedbackPageVOById(FeedbackPageVO feedbackPageVO)
+			throws Exception {
+		if (logger.isDebugEnabled()) {
+			logger.debug("getFeedbackPageVOById(FeedbackPageVO) - start"); //$NON-NLS-1$
+		}
+		String sqlWhere="";
+		if(feedbackPageVO.getWorkerId()!=null && !"".equals(feedbackPageVO.getWorkerId())){
+			sqlWhere=" and a.WorkerId ="+feedbackPageVO.getWorkerId().trim();
+		}
+		if(feedbackPageVO.getUserId()!=null && !"".equals(feedbackPageVO.getUserId())){
+			sqlWhere+=" and b.UserID ="+feedbackPageVO.getUserId().trim();
+		}
+		
+		FeedbackPageVO feedBackPage = (FeedbackPageVO)dao.toView("feedback.getFeedbackByAll", sqlWhere);
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("getFeedbackPageVOById(FeedbackPageVO) - end"); //$NON-NLS-1$
+		}
+		return feedBackPage;
+	}
+	@Override
+	public void deleteFeedbackById(FeedbackPageVO fbvo) throws Exception {
+		if (logger.isDebugEnabled()) {
+			logger.debug("deleteFeedbackById(FeedbackPageVO) - start"); //$NON-NLS-1$
+		}
+		
+		try {
+			dao.startTransaction();
+			dao.doDelete("feedback.doFeedbackDelete", fbvo);
+		} catch (Exception e) {
+			dao.endTransaction();
+			e.printStackTrace();
+		}finally{
+			dao.commitTransation();
+		}
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("deleteFeedbackById(FeedbackPageVO) - end"); //$NON-NLS-1$
+		}
 	}
 
 }
