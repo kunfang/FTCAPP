@@ -16,6 +16,10 @@ public interface WorkerService {
 	
     public void updateWorker(WorkPageVO wvo) throws Exception;
     
-    public List<FeedbackPageVO> getFeedbackBywid(String workId) throws Exception;
+    public List<FeedbackPageVO> getFeedbackBywid(FeedbackPageVO feedbackPageVO) throws Exception;
+    
+    public FeedbackPageVO getFeedbackPageVOById(FeedbackPageVO  feedbackPageVO) throws Exception;
+    
+    public void deleteFeedbackById(FeedbackPageVO fbvo) throws Exception;
 	
 }
