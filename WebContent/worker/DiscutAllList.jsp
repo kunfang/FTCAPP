@@ -31,17 +31,11 @@
 			document.forms.submit();
 		}
 		
-		//跳到增加页面
-		function toInserts() {
-			document.forms.action = "<%=path%>/workerController.do?method=toInsertWorkder";
-			document.forms.submit();
-		}
-		
 		
 		//跳到查看页面
-		function toView(infoId) {
+		function toView(userId,workerId) {
 		
-			document.forms.action = "<%=path%>/workerController.do?method=toView&workerId="+infoId;
+			document.forms.action = "<%=path%>/workerController.do?method=toDiscuDetail&userId="+userId+"&workerId="+workerId;
 			document.forms.submit();
 		}
 		
@@ -51,15 +45,15 @@
 		    document.getElementById("userName").focus();
 		}
 		
-		function doDelete(fids) {
+		function doDelete(userId,workerId) {
 	
-			if (confirm("确定要删除该手艺人吗？") == false) {
+			if (confirm("确定要删除该条评论吗？") == false) {
 				return false;
 			}
-		    document.forms.action = "<%=path%>/workerController.do?method=toWorkDelete&workerId=" + fids;
+		    document.forms.action = "<%=path%>/workerController.do?method=deleteFeedbackPageById&workerId=" + workerId+"&workerIds="+workerId+"&userId="+userId;
 			document.forms.submit();
 		}
-	
+		
 	</script>
   </head>
   
@@ -67,9 +61,10 @@
 		<%@ include file="/menu.jsp" %>&nbsp;
 		    <div class="box">
 			<div class="box_top"></div>
-			<div class="box_center">	
+			<div class="box_center">
 		<form:form commandName="feedbackPageVO" method="post" action="workerController.do" name="forms">
 			<input type="hidden" name="method" value="toViewDiscu" />
+			<input type="hidden" name="workderIds" value="${requestScope.workderIds}"/>	
 					<table class="table1" width="80%">
 							<tr class="td1">
 								<td align="right" class="mctitle">用户名:</td>
@@ -81,7 +76,8 @@
 						&nbsp;
 					<div align="center">
 						<input type="button" class="buttonClass" value="查询(F)" onclick="toSearch('search')"/>&nbsp;&nbsp;
-						<input type="button" id="clean" name="clear" class="buttonClass" value="清除(C)" accesskey="c" onclick="clean_onclick1()"/>
+						<input type="button" id="clean" name="clear" class="buttonClass" value="清除(C)" accesskey="c" onclick="clean_onclick1()"/>&nbsp;&nbsp;
+						<input type="button" class="buttonClass" value="返回(B)" onclick="history.back()"/>
 					</div>
 					<div style="width:970px; margin:0px auto;">
 					
@@ -126,10 +122,9 @@
 								<tr
 										onmouseover="javascript:changeBgColorOnMouseOver(this);"
 										onmouseout="javascript:changeBgColorOnMouseOut(this);" >
-									<td>
+									<td height="14" align="center">
 										&nbsp;
-										 11111
-										&nbsp;
+										<img alt="头像" src="<%=path%>/${feedbackPageList.fileUrl}"  width="80" height="80"/>
 									</td>
 									<td height="14">
 										&nbsp;
@@ -156,11 +151,9 @@
 										&nbsp;
 									</td>
 									<td height="14">
-									    <a href="javascript:toView(${feedbackPageList.workerId});">查看</a>
+									    <a href="javascript:toView(${feedbackPageList.userId},${feedbackPageList.workerId});">查看</a>
                                         &nbsp;
-                                        <a href="javascript:toView(${feedbackPageList.workerId});">回复</a>
-                                        &nbsp;
-										<a href="javascript:doDelete(${feedbackPageList.workerId});">删除</a>
+										<a href="javascript:doDelete(${feedbackPageList.userId},${feedbackPageList.workerId});">删除</a>
 									</td>
 								</tr>
 							</c1:forEach>

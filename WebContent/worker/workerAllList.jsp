@@ -189,7 +189,7 @@
                                         &nbsp;
 										<a href="javascript:doDelete(${workerList.workerId});">删除</a>
 										&nbsp;
-										<a href="<%=path%>/workerController.do?method=toViewDiscu&workerId=${workerList.workerId}">评论</a>
+										<a href="<%=path%>/workerController.do?method=toViewDiscu&workderIds=${workerList.workerId}">评论</a>
 									</td>
 								</tr>
 							</c1:forEach>
