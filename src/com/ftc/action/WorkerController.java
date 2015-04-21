@@ -212,14 +212,18 @@ public class WorkerController {
      *@description [用户评论查看]
      */
 	@RequestMapping(params="method=toViewDiscu") 
-	public String toViewDiscu(FeedbackPageVO fvo,Model model,HttpServletRequest request){
+	public String toViewDiscu(FeedbackPageVO fvo,Model model,String workderIds,HttpServletRequest request){
 		if (logger.isDebugEnabled()) {
 			logger.debug("toViewDiscu(FeedbackPageVO,Model,HttpServletRequest) - start"); //$NON-NLS-1$
 		}
 		try {
-			List<FeedbackPageVO> list=ws.getFeedbackBywid(fvo.getWorkerId());
+			if(workderIds!=null && !"".equals(workderIds)){
+			   fvo.setWorkerId(workderIds);
+			}
+			
+			List<FeedbackPageVO> list=ws.getFeedbackBywid(fvo);
 			model.addAttribute("feedbackPageList",list);
-			//model.addAttribute("workderId",fvo.getWorkerId());
+			request.setAttribute("workderIds",workderIds);
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("errorInfo","getWorkerbyList Error!!!");
@@ -229,4 +233,52 @@ public class WorkerController {
 		}
 		return "worker/DiscutAllList";
 	}
+	
+	/**
+     *@param  [FeedbackPageVO,Model] [评论信息,对象绑定]
+     *@return  [返回需要跳转的页面名称]
+     *@description [评论详细信息查看]
+     */
+	@RequestMapping(params="method=toDiscuDetail") 
+	public String toDiscuDetail(FeedbackPageVO fvo,Model model,HttpServletRequest request){
+		if (logger.isDebugEnabled()) {
+			logger.debug("toDiscuDetail(FeedbackPageVO,Model,HttpServletRequest) - start"); //$NON-NLS-1$
+		}
+		try {
+			FeedbackPageVO feedbackVO=ws.getFeedbackPageVOById(fvo);
+			model.addAttribute("feedbackPageVO",feedbackVO);
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.addAttribute("errorInfo","toDiscuDetail Error!!!");
+		} 
+		if (logger.isDebugEnabled()) {
+			logger.debug("toDiscuDetail(FeedbackPageVO,Model,HttpServletRequest) - end"); //$NON-NLS-1$
+		}
+		return "worker/discutView";
+	}
+	
+	/**
+     *@param  [FeedbackPageVO,Model] [评论信息,对象绑定]
+     *@return  [返回需要跳转的页面名称]
+     *@description [评论删除]
+     */
+	@RequestMapping(params="method=deleteFeedbackPageById") 
+	public String deleteFeedbackPageById(FeedbackPageVO fvo,Model model,String workderIds,HttpServletRequest request){
+		if (logger.isDebugEnabled()) {
+			logger.debug("deleteFeedbackPageById(FeedbackPageVO,Model,HttpServletRequest) - start"); //$NON-NLS-1$
+		}
+		try {
+			ws.deleteFeedbackById(fvo);
+			this.toViewDiscu(fvo, model, workderIds, request);
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.addAttribute("errorInfo","toDiscuDetail Error!!!");
+		} 
+		if (logger.isDebugEnabled()) {
+			logger.debug("deleteFeedbackPageById(FeedbackPageVO,Model,HttpServletRequest) - end"); //$NON-NLS-1$
+		}
+		return "worker/DiscutAllList";
+	}
+	
+	
 }
