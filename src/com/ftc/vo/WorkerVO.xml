@@ -125,6 +125,10 @@
 	<delete id="doWorkDelete" parameterClass="workerVO">
  		delete from b_worker where WorkerId=#workerId# 
  	</delete>
+ 	
+ 	<delete id="doFeedbackDelete" parameterClass="workerVO">
+ 		delete from r_worker_feedback where WorkerId=#workerId# 
+ 	</delete>
 	
 	<select id="getProductByPcode" resultMap="workerRS" parameterClass="string">
 		select * from b_worker  $sqlWhere$ order by WorkerId,WorkerName

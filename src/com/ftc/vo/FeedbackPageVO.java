@@ -13,6 +13,8 @@ public class FeedbackPageVO implements Serializable{
 	private String comments;  //评论
 	private String timeStamp;     //创建时间
     private String datelastupdate; //最后更新时间	
+    private String fileUrl;        //文件路径
+    private String fileName;       //文件名称
 	
 	public String getUserId() {
 		return userId;
@@ -68,6 +70,16 @@ public class FeedbackPageVO implements Serializable{
 	public void setStatusName(String statusName) {
 		this.statusName = statusName;
 	}
-	
-	
+	public String getFileUrl() {
+		return fileUrl;
+	}
+	public void setFileUrl(String fileUrl) {
+		this.fileUrl = fileUrl;
+	}
+	public String getFileName() {
+		return fileName;
+	}
+	public void setFileName(String fileName) {
+		this.fileName = fileName;
+	}
 }

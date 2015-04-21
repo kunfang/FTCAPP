@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="UTF-8" standalone="no"?>
 <!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
-
 <sqlMap namespace="feedback">
     <typeAlias alias="feedbackPageVO" type="com.ftc.vo.FeedbackPageVO" />
     
@@ -18,9 +17,9 @@
 		<result property="comments" column="Comments" />
 		<result property="timeStamp" column="timeStamp" />
 		<result property="datelastupdate" column="datelastupdate" />
+		<result property="fileName" column="fileName" />
+		<result property="fileUrl" column="fileUrl" />
 	</resultMap>
-	
-	
 	
 	<select id="getTotalCount" resultClass="int" parameterClass="string">
 		SELECT count(b.UserID) 
@@ -60,13 +59,11 @@
 			<isPropertyAvailable property="star"><isNotNull prepend="," property="star">#star#</isNotNull></isPropertyAvailable>
 		)</isParameterPresent></dynamic>
 		
-	</insert>   
+	</insert>   -->
 	
-	<delete id="doWorkDelete" parameterClass="workerVO">
- 		delete from b_worker where WorkerId=#workerId# 
- 	</delete> -->
-	
-	
+	<delete id="doFeedbackDelete" parameterClass="feedbackPageVO">
+ 		delete from r_worker_feedback where WorkerId=#workerId# and UserID=#userId#
+ 	</delete> 
 	
 	<select id="getFeedbackByAll" resultMap="feedbackPageRS" parameterClass="string">
 		select b.UserID,
@@ -77,8 +74,11 @@
                d.StatusName,
                a.Comments,
                a.timeStamp,
-	           a.datelastupdate
+	           a.datelastupdate,
+	           f.fileName,
+	           f.fileUrl
          from r_worker_feedback a left join b_user b on a.UserID=b.UserId
+                         left join b_file f on b.appearance=f.fileid
 						 left join b_worker c on a.WorkerId=c.WorkerId
 						 left join b_status d on a.RatStatus=d.Value and d.Category='FeedBackType'
 	     where 1=1 $sqlWhere$
