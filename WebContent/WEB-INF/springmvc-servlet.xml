@@ -48,6 +48,7 @@
     				<bean class="org.springframework.web.servlet.view.freemarker.FreeMarkerViewResolver">
     					<property name="prefix" value=""></property>
     					<property name="suffix" value=".ftl"></property>
+    					<property name="contentType" value="text/html;charset=UTF-8"></property>
     				</bean>
     			</entry>
     		</map>
