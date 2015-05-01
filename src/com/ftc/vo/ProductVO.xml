@@ -40,6 +40,7 @@
 		<result property="statusName" column="statusname" />
 		<result property="datelastupdate" column="timestamp" />
 		<result property="totalNum" column="numbers" />
+		<result property="fileUrl" column="fileurl" />
 	</resultMap>
 		
 	
@@ -125,6 +126,7 @@
 		       date_format(c.begindate,'%Y-%m-%d') as begindate,
                date_format(c.enddate,'%Y-%m-%d') as enddate,
 		       c.createdate,
+		       c.fileurl,
 		       d.value as status,
 		       d.statusname,
 		       c.timestamp,

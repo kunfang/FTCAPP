@@ -198,6 +198,32 @@ public class ProductController {
 		}
 		return "product/showmsg";
 	}
+	
+	/**
+     *@param  [ProductVO,Model] [查询条件信息,对象绑定]
+     *@return  [返回需要跳转的页面名称freemarker]
+     *@description [产品清单]
+     */
+	@RequestMapping(params="method=getProducts4Ftl")
+	public String getProducts4Ftl(ProductVO productVo,Model model) {
+		if (logger.isDebugEnabled()) {
+			logger.debug("getProducts4Ftl(ProductVO) - start"); //$NON-NLS-1$
+		}
+		try {
+			//List<CategoryVO> cateList =productService.getAllCategory();//获取所有的产品类型
+			List<ProductVO> list=productService.queryListOfProdInfo(productVo);
+			model.addAttribute("prodList",list);
+			//model.addAttribute("cateList",cateList);
+		} catch (Exception e) {
+			e.printStackTrace();
+			model.addAttribute("errorInfo","Login Error!!!");
+		}
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("getProducts4Ftl(ProductVO) - end"); //$NON-NLS-1$
+		}
+		return "meijia.ftl";  
+	}
 
 	
 }

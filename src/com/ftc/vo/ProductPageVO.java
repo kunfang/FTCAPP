@@ -24,7 +24,14 @@ public class ProductPageVO {
 	private String datelastupdate;  //最后更新日期
 	private String totalNum;     //使用人数
 	
+	private String fileUrl; // 图片文件路径
 	
+	public String getFileUrl() {
+		return fileUrl;
+	}
+	public void setFileUrl(String fileUrl) {
+		this.fileUrl = fileUrl;
+	}
 	public String getFiletypeName() {
 		return filetypeName;
 	}
