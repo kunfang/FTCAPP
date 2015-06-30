@@ -17,11 +17,15 @@
 	
 	<select id="getUserById" resultMap="userRS" parameterClass="java.lang.String">
 		select * from b_user  where userid = #userid#
-	</select>	
+	</select>
 	
 
 	<select id="getUserByCode" resultMap="userRS" parameterClass="java.lang.String">
 		select * from b_user  where isClient=1 and username = #username#
+	</select>
+	
+	<select id="getUserByMobileNumber" resultMap="userRS" parameterClass="java.lang.String">
+		select * from b_user  where  mobile = #mobile#
 	</select>
 	
 	<delete id="doDelete" parameterClass="java.lang.String">
