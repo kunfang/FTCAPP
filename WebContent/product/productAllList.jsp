@@ -79,11 +79,12 @@
 						</table>
 						&nbsp;
 					<div align="center">
+					
 						<input type="button" class="buttonClass" value="查询(F)" onclick="toSearch('search')"/>&nbsp;&nbsp;
 						<input type="button" class="buttonClass" value="新增(A)" onclick="toInserts()" />&nbsp;&nbsp;
 						<input type="button" id="clean" name="clear" class="buttonClass" value="清除(C)" accesskey="c" onclick="clean_onclick1()"/>
 					</div>
-					<div style="width:970px; margin:0px auto;">
+					<div style="width:970px; margin:0px auto; ">
 					
 							<table class="table3" style="font-size:13px;">
 							<tr>
@@ -183,11 +184,15 @@
 									</td>
 								</tr>
 							</c1:forEach>
-						</table>
+						</table>						
 					</div>
+					<%@ include file="/common/pageLocation.in" %>
+					 
 		      </form:form>
-			</div>
+		     
+			</div>			
 			<div class="box_bottom"></div>
 			</div>
 	</body>
+		
 </html>

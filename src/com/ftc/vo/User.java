@@ -1,7 +1,9 @@
 package com.ftc.vo;
 import java.util.Date;
 
-public class User {
+import com.ftc.jsonvo.DataVO;
+
+public class User extends DataVO {
 	private static final long serialVersionUID = 1L;
 	private int userid;       //用户ID
 	private String username;  //用户名

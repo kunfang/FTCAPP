@@ -6,13 +6,21 @@ package com.ftc.action;
  *@since       [产品信息展示,产品新增,产品修改和产品删除]
  *@description  [产品信息展示,产品新增,产品修改和产品删除]
  */
+import java.util.Collection;
+import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
+
 import javax.annotation.Resource;
 import javax.servlet.http.HttpServletRequest;
+
 import org.apache.log4j.Logger;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
+
+import com.ftc.foundation.view.PageUtil;
 import com.ftc.service.ProductService;
 import com.ftc.vo.CategoryVO;
 import com.ftc.vo.ProductPageVO;
@@ -41,15 +49,24 @@ public class ProductController {
      *@description [产品清单]
      */
 	@RequestMapping(params="method=getProductbyList") 
-	public String getProductbyList(ProductVO productVo,Model model) {
+	public String getProductbyList(ProductVO productVo,PageUtil pU,Model model) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("getProductbyList(ProductVO) - start"); //$NON-NLS-1$
 		}
 		try {
+		
+			if (pU.getCurPage()==0) {
+				pU.setCurPage(1);
+			}
+			
 			List<CategoryVO> cateList =productService.getAllCategory();//获取所有的产品类型
-			List<ProductVO> list=productService.queryListOfProdInfo(productVo);
+			List<ProductVO> list=productService.queryListOfProdInfo(productVo,pU);
+			int totalCount = productService.getProductCounts(productVo);			
+			PageUtil pUtil = new PageUtil();
+			HashMap<String, Integer> pageList = pUtil.getPageList( pU.getCurPage(), totalCount,1);
 			model.addAttribute("prodList",list);
 			model.addAttribute("cateList",cateList);
+			model.addAttribute("pageList",pageList);
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("errorInfo","Login Error!!!");
@@ -67,13 +84,13 @@ public class ProductController {
      *@description [产品删除]
      */
 	@RequestMapping(params="method=toprodDelete") 
-	public String toprodDelete(ProductVO productVo,Model model){
+	public String toprodDelete(ProductVO productVo,PageUtil pU,Model model){
 		if (logger.isDebugEnabled()) {
 			logger.debug("toprodDelete(ProductVO,Model) - start"); //$NON-NLS-1$
 		}
 		try {
 			productService.deleteProdById(productVo);
-			this.getProductbyList(productVo, model);
+			this.getProductbyList(productVo,pU,model);
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
@@ -113,7 +130,7 @@ public class ProductController {
      *@description [产品新增]
      */
 	@RequestMapping(params="method=toInsertProduct") 
-	public String toInsertProduct(ProductPageVO productPageVo,ProductVO productVo,Model model){
+	public String toInsertProduct(ProductPageVO productPageVo,ProductVO productVo,PageUtil pU,Model model){
 		if (logger.isDebugEnabled()) {
 			logger.debug("toInsertProduct(ProductVO,Model) - start"); //$NON-NLS-1$
 		}
@@ -123,7 +140,7 @@ public class ProductController {
 				productService.insertProduct(productPageVo);
 				productVo.setProdName("");
 				productVo.setCategoryId("0");
-				this.getProductbyList(productVo, model);
+				this.getProductbyList(productVo,pU, model);
 				result="product/productAllList";
 			}else{
 				List<StatusVO> fileStatus= productService.getStatusnameByType("FileStatus");
@@ -205,13 +222,13 @@ public class ProductController {
      *@description [产品清单]
      */
 	@RequestMapping(params="method=getProducts4Ftl")
-	public String getProducts4Ftl(ProductVO productVo,Model model) {
+	public String getProducts4Ftl(ProductVO productVo,PageUtil puUtil,Model model) {
 		if (logger.isDebugEnabled()) {
 			logger.debug("getProducts4Ftl(ProductVO) - start"); //$NON-NLS-1$
 		}
 		try {
 			//List<CategoryVO> cateList =productService.getAllCategory();//获取所有的产品类型
-			List<ProductVO> list=productService.queryListOfProdInfo(productVo);
+			List<ProductVO> list=productService.queryListOfProdInfo(productVo,puUtil);
 			model.addAttribute("prodList",list);
 			//model.addAttribute("cateList",cateList);
 		} catch (Exception e) {
@@ -224,6 +241,7 @@ public class ProductController {
 		}
 		return "meijia.ftl";  
 	}
+	
 
 	
 }
