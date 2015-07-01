@@ -38,11 +38,7 @@ public class WebServiceLogController {
 		if (logger.isDebugEnabled()) {
 			logger.debug("getWebServiceList(LogServiceVO) - start"); //$NON-NLS-1$
 		}
-		try {
-
-			if (pUtil.getCurPage()==0) {
-				pUtil.setCurPage(1);
-			}				
+		try {			
 			List<LogServiceVO> list=logService.getLogListByAll(logServiceVO,pUtil);
 			int totalCount = logService.getLogCounts(logServiceVO);
 					
