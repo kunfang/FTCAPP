@@ -35,8 +35,8 @@ public class LogServiceImpl implements LogService {
 			sqlWhere=" and s.taskname like '%"+logServiceVO.getTaskName().trim()+"%'";
 		}
 		if(logServiceVO.getStartTime()!=null && !"".equals(logServiceVO.getStartTime()) ){
-			sqlWhere +=" and s.starttime >= str_to_date('" +logServiceVO.getStartTime()+"','%Y-%m-%d')"
-					+ " and s.starttime < str_to_date('" +logServiceVO.getStartTime()+"','%Y-%m-%d')+1";
+			sqlWhere +=" and s.startime >= str_to_date('" +logServiceVO.getStartTime()+"','%Y-%m-%d')"
+					+ " and s.startime < str_to_date('" +logServiceVO.getStartTime()+"','%Y-%m-%d')+1";
 		}
 		
 		int totalCount = this.getLogCounts(logServiceVO);
@@ -75,8 +75,8 @@ public class LogServiceImpl implements LogService {
 					sqlWhere=" and taskname like '%"+logServiceVO.getTaskName().trim()+"%'";
 				}
 				if(logServiceVO.getStartTime()!=null && !"".equals(logServiceVO.getStartTime()) ){
-					sqlWhere +=" and starttime >= str_to_date('" +logServiceVO.getStartTime()+"','%Y-%m-%d')"
-							+ " and starttime < str_to_date('" +logServiceVO.getStartTime()+"','%Y-%m-%d')+1";
+					sqlWhere +=" and startime >= str_to_date('" +logServiceVO.getStartTime()+"','%Y-%m-%d')"
+							+ " and startime < str_to_date('" +logServiceVO.getStartTime()+"','%Y-%m-%d')+1";
 				}
 				
 				int totalCount = dao.doTotalPageCount("logService.getTotalCount", sqlWhere);

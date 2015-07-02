@@ -12,7 +12,7 @@
 		<result property="logId" column="LogId" />
 		<result property="taskId" column="TaskId" />
 		<result property="taskName" column="TaskName" />
-		<result property="startTime" column="starttime" />
+		<result property="startTime" column="startime" />
 		<result property="endTime" column="EndTime" />
 		<result property="message" column="Message" />
 		<result property="isSuccess" column="Success" />
@@ -60,7 +60,7 @@
  	</delete>
  	<select id="getLogServiceData" resultMap="logServiceRS" parameterClass="string">
 		select s.LogId,s.TaskId,s.TaskName,
-			s.starttime,s.EndTime,s.Message,
+			s.startime,s.EndTime,s.Message,
 			s.Success 
 			from s_log_service s 
 		where 1=1 $sqlWhere$ 
