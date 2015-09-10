@@ -1,8 +1,8 @@
 package com.ftc.vo;
 
-import java.util.Date;
 
 public class ProductVO {
+	@SuppressWarnings("unused")
 	private static final long serialVersionUID = 1L;
 	private String productid;		  //产品ID
 	private String prodName;	  //产品名称
@@ -14,7 +14,15 @@ public class ProductVO {
 	private String timeKeep;	  //保持时间
 	private String comments;      //产品备注
 	
+	private String workerid;
 	
+	
+	public String getWorkerid() {
+		return workerid;
+	}
+	public void setWorkerid(String workerid) {
+		this.workerid = workerid;
+	}
 	public String getProductid() {
 		return productid;
 	}

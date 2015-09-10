@@ -9,7 +9,7 @@
 		<flushInterval hours="24" />
 	</cacheModel>
 	<resultMap id="productRS" class="productVO">
-		<result property="productid" column="productid" />
+		<result property="productid" column="productid"/>
 		<result property="prodName" column="productName" />
 		<result property="price" column="price" />
 		<result property="storePrice" column="storePrice" />
@@ -137,6 +137,7 @@
                          left join b_file c on a.picture=c.fileid
                          left join b_status d on c.status=d.value and d.category='FileStatus'
                          left join b_status e on c.filetype=e.value and e.category='FileType'
+                         left join b_woeker w on a.workerid=w.workerid
                          left join (select count(c.userid) as numbers,c.productid from
 (select b.userid,b.productid from r_orderdetail b group by b.productid,b.userid) c group by c.productid) h
 			on a.productid=h.productid

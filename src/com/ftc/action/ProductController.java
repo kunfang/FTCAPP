@@ -53,7 +53,7 @@ public class ProductController {
 		} catch (Exception e) {
 			e.printStackTrace();
 			model.addAttribute("errorInfo","Login Error!!!");
-		} 
+		}
 		
 		if (logger.isDebugEnabled()) {
 			logger.debug("getProductbyList(ProductVO) - end"); //$NON-NLS-1$
@@ -200,10 +200,13 @@ public class ProductController {
 	}
 	
 	/**
-     *@param  [ProductVO,Model] [查询条件信息,对象绑定]
-     *@return  [返回需要跳转的页面名称freemarker]
-     *@description [产品清单]
-     */
+	 * @author kun.fang
+	 * @date 2015年5月2日 下午10:40:13
+	 * @param productVo
+	 * @param model
+	 * @return [返回需要跳转的页面名称freemarker]
+	 * @description 产品ftl页面
+	 */
 	@RequestMapping(params="method=getProducts4Ftl")
 	public String getProducts4Ftl(ProductVO productVo,Model model) {
 		if (logger.isDebugEnabled()) {
@@ -225,5 +228,30 @@ public class ProductController {
 		return "meijia.ftl";  
 	}
 
-	
+	/**
+	 * @author kun.fang
+	 * @date 2015年5月2日 下午10:42:39
+	 * @param productVo
+	 * @param model
+	 * @return [返回需要跳转的页面名称freemarker]
+	 * @description 产品明细ftl页面
+	 */
+	@RequestMapping(params="method=toView4Ftl") 
+	public String toView4Ftl(ProductVO productVo,Model model){
+		if (logger.isDebugEnabled()) {
+			logger.debug("toView(ProductVO,Model) - start"); //$NON-NLS-1$
+		}
+		String result="";
+		try {
+			ProductPageVO pPageVO=productService.queryProductByPid(productVo.getProductid());
+			model.addAttribute("productPageVO", pPageVO);
+			result="meijiadetail.ftl";
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		if (logger.isDebugEnabled()) {
+			logger.debug("toView(ProductVO,Model) - end"); //$NON-NLS-1$
+		}
+		return result;
+	}
 }
