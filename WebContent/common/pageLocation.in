@@ -1,0 +1,52 @@
+<%@ page language="java" import="java.util.*" pageEncoding="UTF-8"%>
+
+<style type="text/css">
+			#pagediv ul li a { color:#333; text-decoration:none;}
+			#pagediv ul { list-style:none;margin-left:260px; }
+			#pagediv ul li { float:left; border:1px solid #5d9cdf; height:22px;width:50px;padding-top:5px;margin:0px 5px;}
+		</style>
+		<script type="text/javascript">
+			function page_location(obj){
+				var curPage =document.forms.curPage.value;
+				var totalPage =document.forms.totalPage.value;
+				var paramPage;
+				if(obj=='first'){
+					paramPage=1;			
+				}
+				if(obj=='pre'){
+					if(curPage==1){
+						paramPage=1;
+					}else{
+						paramPage=parseInt(curPage)-1;
+					}					
+				}
+				if(obj=='next'){
+					if(curPage==totalPage){
+						paramPage=curPage;
+					}else{
+						paramPage=parseInt(curPage)+1;
+						
+					}					
+				}
+				if(obj=='last'){
+					paramPage=totalPage;			
+				}
+				document.forms.curPage.value=paramPage;
+				toSearch('search');
+			}
+		</script>
+
+<div id="pagediv" style="width:970px; height:50px; margin:0px auto;text-align:center;margin-top:10px" align="center">
+					 <input type="hidden" name="curPage" value="${pageList.curPage}" />
+					 <input type="hidden" name="totalPage" value="${pageList.totalPage}" />
+					
+					 <ul>
+					    <li><a href="javascript:page_location('first');">首页</a></li>
+					    <li><a href="javascript:page_location('pre');">上页</a></li>
+					    <li><a href="javascript:page_location('next');">下页</a></li>
+					    <li><a href="javascript:page_location('last');">尾页</a></li>
+					    <li class="pageinfo">第${pageList.curPage}页</li>
+					    <li class="pageinfo">共${pageList.totalPage}页</li>
+  					 </ul>
+</div>
+

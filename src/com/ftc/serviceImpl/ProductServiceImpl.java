@@ -7,6 +7,7 @@ import org.apache.log4j.Logger;
 import org.springframework.stereotype.Service;
 
 import com.ftc.dao.DefaultDAO;
+import com.ftc.foundation.view.PageUtil;
 import com.ftc.service.ProductService;
 import com.ftc.vo.CategoryVO;
 import com.ftc.vo.FileVO;
@@ -27,7 +28,7 @@ public class ProductServiceImpl implements ProductService {
 		this.dao = dao;
 	}
 
-	public List<ProductVO> queryListOfProdInfo(ProductVO pvo) throws Exception {
+	public List<ProductVO> queryListOfProdInfo(ProductVO pvo,PageUtil pUtil) throws Exception {
 		if (logger.isDebugEnabled()) {
 			logger.debug("queryListOfProdInfo(ProductVO cfg) - start"); //$NON-NLS-1$
 		}
@@ -36,10 +37,13 @@ public class ProductServiceImpl implements ProductService {
 			sqlWhere=" and a.productname like '%"+pvo.getProdName().trim()+"%'";
 		}
 		else if(pvo.getCategoryId()!=null && !"".equals(pvo.getCategoryId()) && !pvo.getCategoryId().equals("0")){
-			sqlWhere=" and a.categoryid="+pvo.getCategoryId();
+			sqlWhere +=" and a.categoryid="+pvo.getCategoryId();
 		}
 		
 		int totalCount = dao.doTotalPageCount("product.getTotalCount", sqlWhere);
+		
+		sqlWhere += "  limit "+(pUtil.getCurPage()-1)+","+pUtil.getPageSize();
+
 		List<ProductVO> list = dao.toList("product.getProductByAll", sqlWhere);
 		
 		if (logger.isDebugEnabled()) {
@@ -227,6 +231,29 @@ public class ProductServiceImpl implements ProductService {
 			logger.debug("queryProductByPid(ProductPageVO) - end"); //$NON-NLS-1$
 		}
 		return result;
+	}
+	
+	@Override
+	public int getProductCounts(ProductVO pvo) throws Exception {
+
+		// TODO Auto-generated method stub
+		if (logger.isDebugEnabled()) {
+			logger.debug("getProductCounts(ProductPageVO) - start"); //$NON-NLS-1$
+		}
+		String sqlWhere="";
+		if(pvo.getProdName()!=null && !"".equals(pvo.getProdName())){
+			sqlWhere=" and a.productname like '%"+pvo.getProdName().trim()+"%'";
+		}
+		else if(pvo.getCategoryId()!=null && !"".equals(pvo.getCategoryId()) && !pvo.getCategoryId().equals("0")){
+			sqlWhere=" and a.categoryid="+pvo.getCategoryId();
+		}
+		
+		int totalCount = dao.doTotalPageCount("product.getTotalCount", sqlWhere);
+		
+		if (logger.isDebugEnabled()) {
+			logger.debug("getProductCounts(ProductPageVO) - end"); //$NON-NLS-1$
+		}
+		return totalCount;
 	}
 
 

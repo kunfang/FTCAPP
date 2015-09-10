@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE sqlMap PUBLIC "-//iBATIS.com//DTD SQL Map 2.0//EN" "http://ibatis.apache.org/dtd/sql-map-2.dtd">
+
+<sqlMap namespace="logService">
+	<typeAlias alias="logServiceVO" type="com.ftc.vo.LogServiceVO" />
+
+	<cacheModel id="oneDayUrgerType" type="LRU">
+		<flushInterval hours="24" />
+	</cacheModel>
+	
+	<resultMap id="logServiceRS" class="logServiceVO">
+		<result property="logId" column="LogId" />
+		<result property="taskId" column="TaskId" />
+		<result property="taskName" column="TaskName" />
+		<result property="startTime" column="startime" />
+		<result property="endTime" column="EndTime" />
+		<result property="message" column="Message" />
+		<result property="isSuccess" column="Success" />
+	</resultMap>
+	
+	<select id="toList" resultMap="logServiceRS" parameterClass="logServiceVO">
+		SELECT * FROM s_log_service 
+		 WHERE 1=1 <isParameterPresent>
+		<isPropertyAvailable property="logId"><isNotNull property="logId"><isNotEmpty prepend="AND" property="logId"> LogId = #logId#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="taskId"><isNotNull property="taskId"><isNotEmpty prepend="AND" property="taskId"> TaskId = #taskId# </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="taskName"><isNotNull property="taskName"><isNotEmpty prepend="AND" property="taskName"> TaskName = #taskName#  </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="startTime"><isNotNull property="startTime"><isNotEmpty prepend="AND" property="startTime"> starttime like '%'|| #startTime# ||'%'</isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="endTime"><isNotNull property="endTime"><isNotEmpty prepend="AND" property="endTime"> EndTime like '%'|| #endTime# ||'%' </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="message"><isNotNull property="message"><isNotEmpty prepend="AND" property="message"> Message LIKE '%' || #message# || '%' </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="isSuccess"><isNotNull property="isSuccess"><isNotEmpty prepend="AND" property="isSuccess"> Success = #isSuccess# </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="orderFid"><isNotNull property="orderFid"><isNotEmpty prepend=" ORDER BY " property="orderFid"> $orderFid$ </isNotEmpty></isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="orderType"><isNotNull property="orderType"><isNotEmpty prepend="  " property="orderType"> $orderType$ </isNotEmpty></isNotNull></isPropertyAvailable>
+		</isParameterPresent>
+	</select>
+	
+	<select id="getTotalCount" resultClass="int" parameterClass="string">
+	    
+		SELECT count(LogId) from s_log_service where 1=1 $sqlWhere$		
+			
+	</select>
+		
+	<insert id="doInsert" parameterClass="logServiceVO">
+		INSERT INTO s_log_service<dynamic><isParameterPresent>(TaskId
+		<isPropertyAvailable property="taskName"><isNotNull prepend="," property="taskName">TaskName</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="startTime"><isNotNull prepend="," property="startTime">starttime</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="endTime"><isNotNull prepend="," property="endTime">EndTime</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="message"><isNotNull prepend="," property="message">Message</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="isSuccess"><isNotNull prepend="," property="isSuccess">Success</isNotNull></isPropertyAvailable>
+		) VALUES(#TaskId#
+		<isPropertyAvailable property="taskName"><isNotNull prepend="," property="taskName">#taskName#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="startTime"><isNotNull prepend="," property="startTime">#startTime#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="endTime"><isNotNull prepend="," property="endTime">#endTime#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="message"><isNotNull prepend="," property="message">#message#</isNotNull></isPropertyAvailable>
+		<isPropertyAvailable property="isSuccess"><isNotNull prepend="," property="isSuccess">#isSuccess#</isNotNull></isPropertyAvailable>
+		)</isParameterPresent></dynamic> 
+	</insert>
+	
+	<delete id="doDelete" parameterClass="logServiceVO">
+ 		delete from s_log_service where LogId=#logId# 
+ 	</delete>
+ 	<select id="getLogServiceData" resultMap="logServiceRS" parameterClass="string">
+		select s.LogId,s.TaskId,s.TaskName,
+			s.startime,s.EndTime,s.Message,
+			s.Success 
+			from s_log_service s 
+		where 1=1 $sqlWhere$ 
+	</select>
+</sqlMap>
+
+

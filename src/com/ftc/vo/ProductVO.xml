@@ -141,7 +141,7 @@
                          left join (select count(c.userid) as numbers,c.productid from
 (select b.userid,b.productid from r_orderdetail b group by b.productid,b.userid) c group by c.productid) h
 			on a.productid=h.productid
-        where 1=1 $sqlWhere$ order by a.productid,b.categoryname asc
+        where 1=1 $sqlWhere$ 
 	</select>
 	
 </sqlMap>

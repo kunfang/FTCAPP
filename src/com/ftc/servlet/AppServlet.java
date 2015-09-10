@@ -4,19 +4,31 @@ import java.io.IOException;
 import java.io.InputStreamReader;
 import java.io.PrintWriter;
 import java.net.URLDecoder;
+import java.util.HashMap;
+import java.util.List;
+
+import javax.annotation.Resource;
 import javax.servlet.ServletException;
 import javax.servlet.http.HttpServlet;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
+
 import net.sf.json.JSONObject;
+
 import org.apache.log4j.Logger;
 
 import com.ftc.constant.WebConstants;
+import com.ftc.dao.DefaultDAO;
 import com.ftc.jsonvo.HeadVO;
 import com.ftc.jsonvo.JsonUtil;
 import com.ftc.jsonvo.JsonVO;
 import com.ftc.jsonvo.ResultVO;
+import com.ftc.service.SysMenuService;
+import com.ftc.service.UserActionService;
+import com.ftc.serviceImpl.SysMenuServiceImpl;
+import com.ftc.serviceImpl.UserActionServiceImpl;
 import com.ftc.vo.MobileLogVO;
+import com.ftc.vo.User;
 
 public class AppServlet extends HttpServlet{
 	/**
@@ -24,6 +36,7 @@ public class AppServlet extends HttpServlet{
 	 */
 	private static final Logger logger = Logger.getLogger(AppServlet.class);
 	
+	public DefaultDAO dDao ;
 	
 	@Override
 	protected void doGet(HttpServletRequest req, HttpServletResponse resp)
@@ -45,13 +58,17 @@ public class AppServlet extends HttpServlet{
 		if (logger.isDebugEnabled()) {
 			logger.debug("doPost(HttpServletRequest, HttpServletResponse) - start"); //$NON-NLS-1$
 		}
+		System.out.println("我进入了吗?");
 		
 		HeadVO headVO = null;
 		ResultVO resultVO = new ResultVO();
 		JsonVO retVO = new JsonVO();  //返回的数据
 		JsonUtil util = new JsonUtil();
 		MobileLogVO tmbl=new MobileLogVO();
+		User user = new User();
 		//MobileLogImpl tmblLog=new MobileLogImpl();
+		
+		
 		
 		try {
 			InputStreamReader isr = new InputStreamReader(request.getInputStream(),"UTF-8");
@@ -66,22 +83,56 @@ public class AppServlet extends HttpServlet{
 			if (logger.isDebugEnabled()) {
 				logger.debug("接收到转换之前xml--转码前：" + inStr.toString()); //$NON-NLS-1$m 
 			}
+			System.out.println("inStr="+inStr);
+			
 			String sendXml =URLDecoder.decode(inStr.toString(),"UTF-8");//转码
+			
+			System.out.println("XML="+sendXml);
+			
 			if (logger.isDebugEnabled()) {
 				logger.debug("接收到转换之后xml--转换后：" + sendXml); //$NON-NLS-1$
 			}
+			System.out.println("--------------------------------1");
 			tmbl.setReqContext(sendXml);
-			 
+			System.out.println("--------------------------------2");
 			new JSONObject();
 			JSONObject json = JSONObject.fromObject(sendXml);  //将xml转成json	
-			
+			System.out.println("--------------------------------3"+json);
 			//转成vo
 			JsonVO jsonVO = null;  //因为不知道data具体是哪个类，所以要在各自的if体内转
 			headVO = (HeadVO)JSONObject.toBean(JSONObject.fromObject(json.get("head")), HeadVO.class);  //取head值
-
-			if(headVO.getFunction().trim().equals("product")){
-				if(headVO.getMethod().trim().equals("query")){ //登录
-					jsonVO = (JsonVO) JSONObject.toBean(json, JsonVO.class);
+			System.out.println(headVO.getFunction().trim()+"-------------------head----"+headVO);
+			if(headVO.getFunction().trim().equals("user")){
+				if(headVO.getMethod().trim().equals("applogin")){ //登录
+//					
+//					jsonVO = util.getJsonVOFromJson(json, User.class);
+//					System.out.println("   0000"+((User)jsonVO.getData()).getMobile());
+//					
+					JSONObject  jObject = JSONObject.fromObject(json.get("data"));					
+					String securityCode = jObject.get("SecurityCode").toString();					
+					String mobile = jObject.get("mobilePhone").toString();
+//					System.out.println(securityCode+"-----"+mobile);
+					
+					UserActionService uActionService = new UserActionServiceImpl();
+					
+					retVO = uActionService.AppLogin(mobile);
+					
+//					dDao = new DefaultDAO();
+//					retVO.setList(dDao.toList("user.getUserByMobileNumber",mobile));
+					
+					
+					
+//					if(list != null && !list.isEmpty())
+//					{
+//						user = (User) list.get(0);
+//					}
+//					SysMenuServiceImpl asms = new SysMenuServiceImpl();
+//					//user = asms.toView("");
+//					//		getUserForMobile(mobile);
+//					user = asms.toView("4");
+					
+					//System.out.println("user="+user);
+					//jsonVO = (JsonVO) JSONObject.toBean(json, JsonVO.class);
 					/*CustomerManagerFacade facade = new CustomerManagerFacadeImpl();
 					tmbl.setSpecificType(WebConstants.SPECIFI_TYPE_GETCUSTOMERLIST);
 					tmbl.setTransactionType(WebConstants.TRANSACTION_TYPE_OUTER);		
@@ -90,10 +141,8 @@ public class AppServlet extends HttpServlet{
 			}
 			
 			
-			
-			
-			
-			resultVO = retVO.getResult();		
+			resultVO.setCode("1");
+			resultVO.setMessage("登陆成功");		
 			tmbl.setSuccessFlag("1");
 		} catch (IOException e) {
 			logger.error("doPost(HttpServletRequest, HttpServletResponse)", e); //$NON-NLS-1$
@@ -118,8 +167,6 @@ public class AppServlet extends HttpServlet{
 			retVO.setResult(resultVO);
 			retVO.setData(retVO.getData());
 
-//			System.out.println(startDate+"接口开始时间");
-//			System.out.println(df.format(new Date())+"接口结束时间");
 			
 			
 			try{

@@ -8,9 +8,9 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN">
 <html>
   <head>
-    <base href="<%=basePath%>">
+    <base href="<%=basePath%>"> 
     
-    <title>产品管理</title>
+    <title>日志管理</title>
     <link href="<%=path%>/css/page2.css" rel="stylesheet" type="text/css">
 	<link href="<%=path%>/css/ddsmoothmenu.css" type="text/css" rel="stylesheet">
 	<meta http-equiv="pragma" content="no-cache">
@@ -31,34 +31,11 @@
 			document.forms.submit();
 		}
 		
-		//跳到增加页面
-		function toInserts() {
-			document.forms.action = "<%=path%>/productlist.do?method=toInsertProduct&isflag=Y";
-			document.forms.submit();
-		}
-		
-		
-		//跳到查看页面
-		function toView(infoId) {
-		
-			document.forms.action = "<%=path%>/productlist.do?method=toView&productid="+infoId;
-			document.forms.submit();
-		}
-		
 		function clean_onclick1(){
-		    document.getElementById("prodName").value="";
-		    document.getElementById("prodName").focus();
+		    document.getElementById("startTime").value="";
+		    document.getElementById("taskName").value="";
 		}
 		
-		function doDelete(fids) {
-	
-			if (confirm("确定要删除该产品吗？") == false) {
-				return false;
-			}
-		    document.forms.action = "<%=path%>/productlist.do?method=toprodDelete&productid=" + fids;
-			document.forms.submit();
-		}
-	
 	</script>
   </head>
   
@@ -67,54 +44,41 @@
 		    <div class="box">
 			<div class="box_top"></div>
 			<div class="box_center">	
-		<form:form commandName="productVO" method="post" action="productlist.do" name="forms">
-			<input type="hidden" name="method" value="getProductbyList" />
+		<form:form commandName="logServiceVO" method="post" action="webservicelist.do" name="forms">
+			<input type="hidden" name="method" value="getWebServiceList" />
 					<table class="table1" >
 							<tr class="td1">
-								<td align="right" class="mctitle">产品类型:</td>
-								<td align="left" class="mctitle"><form:select path="categoryId" items="${cateList}" itemValue="categoryId" itemLabel="categoryName" /></td>
-								<td align="right" class="mctitle">产品名称:</td>
-								<td align="left" class="mctitle"><form:input path="prodName"/></td>
+								<td align="right" class="mctitle">任务开始时间:</td>
+								<td align="left" class="mctitle"><form:input path="startTime" maxlength="50" onfocus="new WdatePicker(this,'%Y-%M-%D',true)" />&nbsp;&nbsp;</td>
+								<td align="right" class="mctitle">任务名称:</td>
+								<td align="left" class="mctitle"><form:input path="taskName" maxlength="50"/>&nbsp;&nbsp;</td>
 							</tr>
 						</table>
 						&nbsp;
 					<div align="center">
-					
 						<input type="button" class="buttonClass" value="查询(F)" onclick="toSearch('search')"/>&nbsp;&nbsp;
-						<input type="button" class="buttonClass" value="新增(A)" onclick="toInserts()" />&nbsp;&nbsp;
 						<input type="button" id="clean" name="clear" class="buttonClass" value="清除(C)" accesskey="c" onclick="clean_onclick1()"/>
 					</div>
-					<div style="width:970px; margin:0px auto; ">
-					
+					<div style="width:970px; margin:0px auto;">
 							<table class="table3" style="font-size:13px;">
 							<tr>
 								<th nowrap scope="col" height="24" >
-									<div orderBy="true">产品名称</div>
+									<div orderBy="true">任务编码</div>
 								</th>
 								<th scope="col" height="24" nowrap id=".truename">
-									<div orderBy="true">产品类型</div>
+									<div orderBy="true">任务名称</div>
 								</th>
 								<th scope="col" height="24" nowrap id=".orgid">
-									<div orderBy="true">新手礼</div>
+									<div orderBy="true">任务开始时间</div>
 								</th>
 								<th scope="col" height="24" nowrap id="">
-									<div orderBy="true">店面价</div>
+									<div orderBy="true">任务结束时间</div>
 								</th>
 							    <th scope="col" height="24" nowrap id="">
-									<div orderBy="true">服务人数</div>
+									<div orderBy="true">是否成功</div>
 								</th>
-								
 								<th scope="col" height="24" nowrap id=".orgid">
-									<div orderBy="true">耗时</div>
-								</th>
-								<th scope="col" height="24" nowrapid=".orgid">
-									<div orderBy="true">保持</div>
-								</th>
-								<th scope="col" height="24" nowrapid=".orgid">
-									<div orderBy="true">产品评价</div>
-								</th>
-								<th scope="col" height="24" nowrap>
-									<div orderBy="true">操作</div>
+									<div orderBy="true">错误信息</div>
 								</th>
 							</tr>
 							
@@ -122,7 +86,7 @@
 								int i = 0;
 								String trclass = "td2";
 							%>
-							<c1:forEach items="${prodList}" var="prodList" >
+							<c1:forEach items="${logList}" var="logList" >
 								<%
 											i++;
 											if (i % 2 == 0)
@@ -134,65 +98,46 @@
 								<tr
 										onmouseover="javascript:changeBgColorOnMouseOver(this);"
 										onmouseout="javascript:changeBgColorOnMouseOut(this);" >
+									
 									<td>
 										&nbsp;
-										  ${prodList.prodName}
+										  ${logList.taskId}
 										&nbsp;
 									</td>
 									<td height="14">
 										&nbsp;
-										${prodList.categoryName}
+										${logList.taskName}
 									</td>
 									<td height="14">
 										&nbsp;
-										${prodList.price}
+										${logList.startTime}
 										&nbsp;
 									</td>
 									
 									<td height="14">
 										&nbsp;
-										${prodList.storePrice}
+										${logList.endTime}
 										&nbsp;
 									</td>
 									<td height="14">
 										&nbsp;
-										${prodList.totalNum}
+										<c1:if test="${logList.isSuccess=='Y'}">成功</c1:if>
+										<c1:if test="${logList.isSuccess=='N'}">失败</c1:if>
 										&nbsp;
 									</td>
 									<td height="14">
 										&nbsp;
-										${prodList.timeConsume}
+										${logList.message}
 										&nbsp;
-									</td>
-									<td height="14">
-										&nbsp;
-										${prodList.timeKeep}
-										&nbsp;
-									</td>
-									<td height="14">
-										&nbsp;
-										${prodList.comments}
-										&nbsp;
-									</td>
-									<td height="14">
-									    &nbsp;
-									    <a href="javascript:toView(${prodList.productid});">查看</a>
-									    &nbsp;
-										<a href="<%=path%>/productlist.do?method=selectProductForUpdate&productid=${prodList.productid}">修改</a>
-                                        &nbsp;
-										<a href="javascript:doDelete(${prodList.productid});">删除</a>
 									</td>
 								</tr>
 							</c1:forEach>
 						</table>						
 					</div>
 					<%@ include file="/common/pageLocation.in" %>
-					 
 		      </form:form>
-		     
-			</div>			
+			</div>
 			<div class="box_bottom"></div>
 			</div>
 	</body>
-		
 </html>

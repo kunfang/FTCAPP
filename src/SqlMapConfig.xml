@@ -26,5 +26,6 @@
 	 <sqlMap resource="com/ftc/vo/WorkerVO.xml"/>
 	 <sqlMap resource="com/ftc/vo/DistinctVO.xml"/>
 	 <sqlMap resource="com/ftc/vo/FeedbackVO.xml"/>
+	 <sqlMap resource="com/ftc/vo/LogServiceVO.xml"/>
 </sqlMapConfig>
 
